@@ -192,25 +192,12 @@ def build_docx():
 
     # Industrial Certificate
     add_chapter_title("Industrial Internship Certificate")
-    digicon_logo = os.path.join(PROJECT_ROOT, "figures", "digicon_logo.png")
-    if os.path.exists(digicon_logo):
-        p_dlogo = doc.add_paragraph()
-        p_dlogo.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p_dlogo.add_run().add_picture(digicon_logo, width=Inches(1.8))
-    
-    p = doc.add_paragraph()
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.add_run("DIGICON TECHNOLOGIES PLC\n").bold = True
-    p.add_run("Rajuk Trade Center, Nikunja-2, Khilkhet, Dhaka-1229, Bangladesh\nhttps://www.digicontechnologies.com | info@digicontechnologies.com\n\n")
-    p.add_run("TO WHOM IT MAY CONCERN\n\n").bold = True
-    
-    p_body = doc.add_paragraph()
-    p_body.add_run("This is to certify that Shahriar Hasan, Student ID: 2002138, a student of Bachelor of Science in Electronics and Communication Engineering at Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, has successfully completed his industrial internship with Digicon Technologies PLC from July 01, 2026 to September 30, 2026.\n\nDuring his tenure as a Software Engineering Intern (Backend Development) within our Software Engineering and Technology Solutions Division, he contributed to high-throughput RESTful API engineering using Node.js, Express.js, and NestJS, CRM ticket routing, SMS Gateway microservices with BullMQ, and Docker containerization.\n\nHis conduct and performance were outstanding. We wish him all the very best in his prospective endeavors.\n\n\n")
-
-    t_icert = doc.add_table(rows=1, cols=2)
-    remove_table_borders(t_icert)
-    t_icert.rows[0].cells[0].paragraphs[0].add_run("....................................................\nIndustrial Supervisor\nLead Software Architect\nDigicon Technologies PLC")
-    t_icert.rows[0].cells[1].paragraphs[0].add_run("....................................................\nHead of Human Resources\nDigicon Technologies PLC\nDhaka, Bangladesh")
+    cert_img = os.path.join(PROJECT_ROOT, "figures", "cert.png")
+    if os.path.exists(cert_img):
+        p_cert = doc.add_paragraph()
+        p_cert.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p_cert.paragraph_format.space_before = Pt(10)
+        p_cert.add_run().add_picture(cert_img, width=Inches(6.2))
     doc.add_page_break()
 
     # ─────────────────────────────────────────────────────────

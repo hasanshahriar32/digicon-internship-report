@@ -182,52 +182,11 @@ To the best of my knowledge, this report or any part thereof has not been submit
 
 // Industrial Certificate
 #heading(level: 1, numbering: none)[Industrial Internship Certificate]
-#v(0.2cm)
+#v(0.3cm)
 
 #align(center)[
-  #image("figures/digicon_logo.png", width: 4.5cm) \
-  #v(0.1cm)
-  #text(size: 13pt, weight: "bold")[DIGICON TECHNOLOGIES PLC] \
-  #text(size: 10pt, fill: luma(100))[Rajuk Trade Center, Nikunja-2, Khilkhet, Dhaka-1229, Bangladesh] \
-  #text(size: 9pt, fill: luma(120))[https://www.digicontechnologies.com | info\@digicontechnologies.com] \
-  #v(0.4cm)
-  #text(size: 14pt, weight: "bold")[#underline[TO WHOM IT MAY CONCERN]]
+  #image("figures/cert.png", width: 92%)
 ]
-
-#v(0.4cm)
-*Ref:* DTL/HRD/INTERN/2026/089 #h(1fr) *Date:* October 04, 2026
-
-#v(0.3cm)
-This is to certify that *Shahriar Hasan*, Student ID: *2002138*, a student of Bachelor of Science in Electronics and Communication Engineering at Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, has successfully completed his industrial internship with *Digicon Technologies PLC* from *July 01, 2026* to *September 30, 2026*.
-
-During his tenure as a *Software Engineering Intern (Backend Development)* within our Software Engineering and Technology Solutions Division, he actively contributed to the development and enhancement of our core enterprise platforms, specifically focusing on:
-1. High-throughput RESTful API engineering using the Node.js runtime, Express.js, and NestJS.
-2. Implementation of the Customer Relationship Management (CRM) ticket routing engine and SLA event dispatcher.
-3. Construction of the Enterprise SMS Gateway microservice featuring BullMQ queue processing, Token Bucket rate limiting, and webhook cryptographic signature verification.
-4. Database schema modeling and index optimization across MongoDB and PostgreSQL clusters.
-5. Comprehensive unit testing, API test automation with Jest/Supertest, and Docker containerization.
-
-Throughout the internship, Shahriar demonstrated exceptional analytical capabilities, strong engineering discipline, a profound eagerness to learn modern architectural practices, and exemplary teamwork within our Agile/Scrum development sprints.
-
-His conduct and performance during the internship tenure were outstanding. We wish him all the very best and continued success in his prospective academic and professional endeavors.
-
-#v(1.8cm)
-#grid(
-  columns: (1fr, 1fr),
-  [
-    .................................................... \
-    *Industrial Supervisor* \
-    Lead Software Architect \
-    Software Engineering Division \
-    Digicon Technologies PLC
-  ],
-  [
-    .................................................... \
-    *Head of Human Resources* \
-    Digicon Technologies PLC \
-    Dhaka, Bangladesh
-  ]
-)
 
 #pagebreak()
 
