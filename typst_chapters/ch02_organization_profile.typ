@@ -49,6 +49,20 @@ As a cornerstone of its commercial success, Digicon operates one of the largest 
 - *Multi-Channel Coverage:* The platform bridges inbound/outbound voice telephony, interactive voice response (IVR), web chat widgets, official social media messaging, and automated ticketing.
 - *Global Outreach:* Services are delivered across 14 operational hubs, supporting clients spanning 40+ countries and handling interactions in multiple regional and international languages.
 
+@fig:digicon_facility_reception and @fig:digicon_bpo_floor illustrate the corporate entrance and the high-density contact center operations floor at Digicon Technologies PLC.
+
+#figure(
+  image("figures/photo_digicon_reception.png", width: 95%),
+  caption: [Digicon Technologies Corporate Headquarters Entrance and Reception Facility.]
+) <fig:digicon_facility_reception>
+
+
+#figure(
+  image("figures/photo_digicon_bpo_floor.png", width: 95%),
+  caption: [Digicon Enterprise BPO and Contact Center Operations Floor.]
+) <fig:digicon_bpo_floor>
+
+
 === Software and Technology Solutions Division
 
 Complementing its service operations, Digicon maintains an extensive internal software engineering wing dedicated to designing custom enterprise software, cloud-native SaaS platforms, and automation tools. The software solutions portfolio includes:

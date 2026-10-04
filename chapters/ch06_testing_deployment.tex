@@ -180,3 +180,37 @@ Continuous Integration was configured via automated pipelines (GitLab CI / GitHu
     \item Automated Jest unit and Supertest integration suites are executed against ephemeral MongoDB and PostgreSQL test containers.
     \item If all quality gates pass, Docker images are built and pushed to Digicon's private Docker registry, triggering a zero-downtime rolling update across staging servers.
 \end{enumerate}
+
+\section{On-Premise Infrastructure and Facility Reliability}
+\label{sec:test_datacenter}
+
+To satisfy rigorous data sovereignty and latency mandates for tier-1 telecom and banking clientele, Digicon maintains an enterprise-grade on-premise data center and critical power backup infrastructure alongside cloud environments. 
+
+Figure~\ref{fig:digicon_server_room} shows the server racks hosting internal microservices, private registries, and staging database clusters. Figure~\ref{fig:digicon_power_infra} depicts the industrial switchgear electrical panels and redundant online UPS battery cabinets guaranteeing uninterrupted operational continuity (99.98\% uptime SLA) against municipal power grid fluctuations.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.88\textwidth]{figures/photo_digicon_server_room.png}
+    \caption{Digicon On-Premise Data Center and Application Server Racks.}
+    \label{fig:digicon_server_room}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.52\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/photo_digicon_switchgear_panel.png}
+        \caption{Main Switchgear and Electrical Distribution Panel}
+        \label{fig:digicon_switchgear}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.44\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/photo_digicon_power_cabinets.png}
+        \caption{Redundant UPS Power Cabinets}
+        \label{fig:digicon_ups}
+    \end{subfigure}
+    \caption{Industrial Power Distribution and Redundant Backup Infrastructure at Digicon Facilities.}
+    \label{fig:digicon_power_infra}
+\end{figure}
+

@@ -190,6 +190,34 @@ def convert_chapter_file(tex_path):
             m_lbl = re.search(r'\\label\{([^}]+)\}', fig_full)
             label = m_lbl.group(1) if m_lbl else ""
             
+            # Check if this figure contains subfigures or multiple images
+            subfigures = re.findall(r'\\begin\{subfigure\}.*?\\end\{subfigure\}', fig_full, re.DOTALL)
+            if subfigures:
+                sub_blocks = []
+                for sub in subfigures:
+                    s_img = re.search(r'\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}', sub)
+                    s_cap = re.search(r'\\caption\{([^}]+)\}', sub)
+                    if s_img:
+                        s_caption_text = convert_refs(convert_citations(s_cap.group(1))) if s_cap else ""
+                        sub_blocks.append(f'figure(\n    image("{s_img.group(1)}", width: 100%),\n    caption: [{s_caption_text}]\n  )')
+                
+                # Outer caption and label after the subfigures
+                after_sub = re.sub(r'\\begin\{subfigure\}.*?\\end\{subfigure\}', '', fig_full, flags=re.DOTALL)
+                m_cap_outer = re.search(r'\\caption\{([^}]+)\}', after_sub)
+                m_lbl_outer = re.search(r'\\label\{([^}]+)\}', after_sub)
+                outer_caption = m_cap_outer.group(1) if m_cap_outer else caption
+                outer_label = m_lbl_outer.group(1) if m_lbl_outer else label
+
+                main_cap = convert_refs(convert_citations(outer_caption))
+                grid_content = ',\n  '.join(sub_blocks)
+                typst_fig = f'#figure(\n  grid(\n    columns: (1fr, 1fr),\n    gutter: 14pt,\n    {grid_content}\n  ),\n  caption: [{main_cap}]\n)'
+                if outer_label:
+                    typst_fig += f' <{outer_label}>'
+                out_lines.append(typst_fig)
+                out_lines.append('')
+                i += 1
+                continue
+
             if not img_path and "The Node.js Libuv Event Loop Phases" in fig_full:
                 typst_fig = """#figure(
   block(

@@ -181,3 +181,34 @@ Continuous Integration was configured via automated pipelines (GitLab CI / GitHu
 - TypeScript compiler checks strict type compliance.
 - Automated Jest unit and Supertest integration suites are executed against ephemeral MongoDB and PostgreSQL test containers.
 - If all quality gates pass, Docker images are built and pushed to Digicon's private Docker registry, triggering a zero-downtime rolling update across staging servers.
+
+== On-Premise Infrastructure and Facility Reliability <sec:test_datacenter>
+
+
+To satisfy rigorous data sovereignty and latency mandates for tier-1 telecom and banking clientele, Digicon maintains an enterprise-grade on-premise data center and critical power backup infrastructure alongside cloud environments. 
+
+@fig:digicon_server_room shows the server racks hosting internal microservices, private registries, and staging database clusters. @fig:digicon_power_infra depicts the industrial switchgear electrical panels and redundant online UPS battery cabinets guaranteeing uninterrupted operational continuity (99.98% uptime SLA) against municipal power grid fluctuations.
+
+#figure(
+  image("figures/photo_digicon_server_room.png", width: 95%),
+  caption: [Digicon On-Premise Data Center and Application Server Racks.]
+) <fig:digicon_server_room>
+
+
+#figure(
+  grid(
+    columns: (1fr, 1fr),
+    gutter: 14pt,
+    figure(
+    image("figures/photo_digicon_switchgear_panel.png", width: 100%),
+    caption: [Main Switchgear and Electrical Distribution Panel]
+  ),
+  figure(
+    image("figures/photo_digicon_power_cabinets.png", width: 100%),
+    caption: [Redundant UPS Power Cabinets]
+  )
+  ),
+  caption: [Industrial Power Distribution and Redundant Backup Infrastructure at Digicon Facilities.]
+) <fig:digicon_power_infra>
+
+

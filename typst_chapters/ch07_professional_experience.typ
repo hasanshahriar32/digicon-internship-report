@@ -11,6 +11,15 @@ The work environment is characterized by:
 - *Meritocratic and Collaborative Culture:* Senior software architects, team leads, and interns engage in open technical debate. Architectural design proposals are evaluated based on empirical benchmarks, code maintainability, and scalability rather than corporate hierarchy.
 - *Continuous Learning and Mentorship:* Bi-weekly internal engineering seminars (known as _Tech Brown Bags_) provided forums where backend engineers presented emerging tools, such as Kafka event streaming, Kubernetes orchestration, and Rust-based WebAssembly integrations.
 
+@fig:digicon_workstation showcases the author's primary engineering workstation at Digicon Technologies, configured with dual high-resolution displays, Linux-based development environments, and real-time monitoring terminals.
+
+#figure(
+  image("figures/photo_digicon_workstation.png", width: 95%),
+  caption: [Engineering Workstation and Backend Development Setup during the Internship.]
+) <fig:digicon_workstation>
+
+
+
 == Agile/Scrum Workflow and Sprint Ceremonies <sec:exp_agile>
 
 
