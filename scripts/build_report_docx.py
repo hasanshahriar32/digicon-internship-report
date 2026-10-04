@@ -90,7 +90,7 @@ def build_docx():
     p_sub.paragraph_format.space_before = Pt(14)
     run_sub = p_sub.add_run("Submitted By---\n")
     run_sub.font.bold = True
-    p_sub.add_run("Hasan Shahriar\nStudent ID: 2002126\nLevel: 4, Semester: II\n")
+    p_sub.add_run("Shahriar Hasan\nStudent ID: 2002138\nLevel: 4, Semester: II\n")
 
     # HSTU Logo
     logo_path = os.path.join(PROJECT_ROOT, "figures", "hstu_logo.png")
@@ -174,7 +174,7 @@ def build_docx():
     p = doc.add_paragraph()
     p.add_run("Date: October 04, 2026\nTo:\nThe Chairman\nDepartment of Electronics and Communication Engineering\nHajee Mohammad Danesh Science and Technology University (HSTU)\nDinajpur-5200, Bangladesh.\n\n")
     p.add_run("Subject: Submission of Internship Report on Backend Web Development at Digicon Technologies PLC.\n\n").bold = True
-    p.add_run("Dear Sir,\n\nIt is an immense privilege to submit my industrial attachment report titled “Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC”, completed as an indispensable requirement for the degree of Bachelor of Science in Electronics and Communication Engineering (Course Code: ECE 450).\n\nThis internship provided me with invaluable practical exposure to enterprise-level software engineering paradigms in an industry-leading IT and BPO enterprise. Throughout the tenure of my internship at Digicon Technologies PLC, I was actively embedded within the Backend Engineering division. I was entrusted with architecting, developing, and optimizing mission-critical backend services utilizing the JavaScript and TypeScript runtime ecosystems, specifically leveraging Node.js, Express.js, and NestJS alongside PostgreSQL, MongoDB, and Redis.\n\nSincerely yours,\n\n....................................................\nHasan Shahriar\nStudent ID: 2002126\nDepartment of ECE, HSTU\n")
+    p.add_run("Dear Sir,\n\nIt is an immense privilege to submit my industrial attachment report titled “Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC”, completed as an indispensable requirement for the degree of Bachelor of Science in Electronics and Communication Engineering (Course Code: ECE 450).\n\nThis internship provided me with invaluable practical exposure to enterprise-level software engineering paradigms in an industry-leading IT and BPO enterprise. Throughout the tenure of my internship at Digicon Technologies PLC, I was actively embedded within the Backend Engineering division. I was entrusted with architecting, developing, and optimizing mission-critical backend services utilizing the JavaScript and TypeScript runtime ecosystems, specifically leveraging Node.js, Express.js, and NestJS alongside PostgreSQL, MongoDB, and Redis.\n\nSincerely yours,\n\n....................................................\nShahriar Hasan\nStudent ID: 2002138\nDepartment of ECE, HSTU\n")
     doc.add_page_break()
 
     # ─────────────────────────────────────────────────────────
@@ -182,7 +182,7 @@ def build_docx():
     # ─────────────────────────────────────────────────────────
     add_chapter_title("Academic Supervisor's Certificate")
     p = doc.add_paragraph()
-    p.add_run("This is to certify that the internship report titled “Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC” is an authentic record of industrial attachment work performed by Hasan Shahriar (Student ID: 2002126), a candidate for the degree of Bachelor of Science in Electronics and Communication Engineering from Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, Bangladesh.\n\nThe internship was carried out in partial fulfillment of the requirements for the course ECE 450: Industrial Training / Internship under my academic supervision. To the best of my knowledge, this report has not been submitted previously to any other university or institution.\n\n\n")
+    p.add_run("This is to certify that the internship report titled “Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC” is an authentic record of industrial attachment work performed by Shahriar Hasan (Student ID: 2002138), a candidate for the degree of Bachelor of Science in Electronics and Communication Engineering from Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, Bangladesh.\n\nThe internship was carried out in partial fulfillment of the requirements for the course ECE 450: Industrial Training / Internship under my academic supervision. To the best of my knowledge, this report has not been submitted previously to any other university or institution.\n\n\n")
     
     t_cert = doc.add_table(rows=1, cols=2)
     remove_table_borders(t_cert)
@@ -205,7 +205,7 @@ def build_docx():
     p.add_run("TO WHOM IT MAY CONCERN\n\n").bold = True
     
     p_body = doc.add_paragraph()
-    p_body.add_run("This is to certify that Hasan Shahriar, Student ID: 2002126, a student of Bachelor of Science in Electronics and Communication Engineering at Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, has successfully completed his industrial internship with Digicon Technologies PLC from July 01, 2026 to September 30, 2026.\n\nDuring his tenure as a Software Engineering Intern (Backend Development) within our Software Engineering and Technology Solutions Division, he contributed to high-throughput RESTful API engineering using Node.js, Express.js, and NestJS, CRM ticket routing, SMS Gateway microservices with BullMQ, and Docker containerization.\n\nHis conduct and performance were outstanding. We wish him all the very best in his prospective endeavors.\n\n\n")
+    p_body.add_run("This is to certify that Shahriar Hasan, Student ID: 2002138, a student of Bachelor of Science in Electronics and Communication Engineering at Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, has successfully completed his industrial internship with Digicon Technologies PLC from July 01, 2026 to September 30, 2026.\n\nDuring his tenure as a Software Engineering Intern (Backend Development) within our Software Engineering and Technology Solutions Division, he contributed to high-throughput RESTful API engineering using Node.js, Express.js, and NestJS, CRM ticket routing, SMS Gateway microservices with BullMQ, and Docker containerization.\n\nHis conduct and performance were outstanding. We wish him all the very best in his prospective endeavors.\n\n\n")
 
     t_icert = doc.add_table(rows=1, cols=2)
     remove_table_borders(t_icert)
@@ -218,7 +218,7 @@ def build_docx():
     # ─────────────────────────────────────────────────────────
     add_chapter_title("Candidate's Declaration")
     p = doc.add_paragraph()
-    p.add_run("I hereby declare that the work presented in this internship report titled “Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC” is an original account of the industrial training undertaken by me for the award of the degree of Bachelor of Science in Electronics and Communication Engineering at Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, Bangladesh.\n\nDate: October 04, 2026\nPlace: HSTU, Dinajpur\n\n....................................................\nHasan Shahriar\nStudent ID: 2002126\nDepartment of ECE, HSTU\n")
+    p.add_run("I hereby declare that the work presented in this internship report titled “Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC” is an original account of the industrial training undertaken by me for the award of the degree of Bachelor of Science in Electronics and Communication Engineering at Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, Bangladesh.\n\nDate: October 04, 2026\nPlace: HSTU, Dinajpur\n\n....................................................\nShahriar Hasan\nStudent ID: 2002138\nDepartment of ECE, HSTU\n")
     doc.add_page_break()
 
     add_chapter_title("Executive Summary")

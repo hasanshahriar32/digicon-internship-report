@@ -1,4 +1,4 @@
-#set document(title: "Internship Report: Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC", author: "Hasan Shahriar")
+#set document(title: "Internship Report: Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC", author: "Shahriar Hasan")
 #set page(paper: "a4", margin: (left: 3.0cm, right: 2.5cm, top: 2.5cm, bottom: 2.5cm))
 #set text(font: "Times New Roman", size: 12pt, lang: "en")
 #set par(justify: true, leading: 0.8em, first-line-indent: 1.5em)
@@ -75,8 +75,8 @@
   #v(0.8fr)
   #text(size: 11.5pt, weight: "bold")[Submitted By---] \
   #v(0.2cm)
-  #text(size: 12pt, weight: "bold")[Hasan Shahriar] \
-  #text(size: 11pt, weight: "bold")[Student ID: 2002126] \
+  #text(size: 12pt, weight: "bold")[Shahriar Hasan] \
+  #text(size: 11pt, weight: "bold")[Student ID: 2002138] \
   #text(size: 10.5pt)[Level: 4, Semester: II]
   
   #v(1.0fr)
@@ -138,8 +138,8 @@ I sincerely hope that this report meets your expectations and adequately reflect
 Sincerely yours, \
 #v(0.8cm)
 .................................................... \
-*Hasan Shahriar* \
-Student ID: 2002126 \
+*Shahriar Hasan* \
+Student ID: 2002138 \
 Level: 4, Semester: II \
 Department of Electronics and Communication Engineering \
 Hajee Mohammad Danesh Science and Technology University (HSTU) \
@@ -153,7 +153,7 @@ Dinajpur-5200, Bangladesh
 #heading(level: 1, numbering: none)[Academic Supervisor's Certificate]
 #v(0.6cm)
 
-This is to certify that the internship report titled *"Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC"* is an authentic record of industrial attachment work performed by *Hasan Shahriar* (Student ID: *2002126*), a candidate for the degree of *Bachelor of Science in Electronics and Communication Engineering* from Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, Bangladesh.
+This is to certify that the internship report titled *"Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC"* is an authentic record of industrial attachment work performed by *Shahriar Hasan* (Student ID: *2002138*), a candidate for the degree of *Bachelor of Science in Electronics and Communication Engineering* from Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, Bangladesh.
 
 The internship was carried out in partial fulfillment of the requirements for the course *ECE 450: Industrial Training / Internship* under my academic supervision. The candidate has actively completed the prescribed period of training at Digicon Technologies PLC and has compiled the technical, architectural, and operational findings into this monograph.
 
@@ -198,7 +198,7 @@ To the best of my knowledge, this report or any part thereof has not been submit
 *Ref:* DTL/HRD/INTERN/2026/089 #h(1fr) *Date:* October 04, 2026
 
 #v(0.3cm)
-This is to certify that *Hasan Shahriar*, Student ID: *2002126*, a student of Bachelor of Science in Electronics and Communication Engineering at Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, has successfully completed his industrial internship with *Digicon Technologies PLC* from *July 01, 2026* to *September 30, 2026*.
+This is to certify that *Shahriar Hasan*, Student ID: *2002138*, a student of Bachelor of Science in Electronics and Communication Engineering at Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, has successfully completed his industrial internship with *Digicon Technologies PLC* from *July 01, 2026* to *September 30, 2026*.
 
 During his tenure as a *Software Engineering Intern (Backend Development)* within our Software Engineering and Technology Solutions Division, he actively contributed to the development and enhancement of our core enterprise platforms, specifically focusing on:
 1. High-throughput RESTful API engineering using the Node.js runtime, Express.js, and NestJS.
@@ -207,7 +207,7 @@ During his tenure as a *Software Engineering Intern (Backend Development)* withi
 4. Database schema modeling and index optimization across MongoDB and PostgreSQL clusters.
 5. Comprehensive unit testing, API test automation with Jest/Supertest, and Docker containerization.
 
-Throughout the internship, Hasan demonstrated exceptional analytical capabilities, strong engineering discipline, a profound eagerness to learn modern architectural practices, and exemplary teamwork within our Agile/Scrum development sprints.
+Throughout the internship, Shahriar demonstrated exceptional analytical capabilities, strong engineering discipline, a profound eagerness to learn modern architectural practices, and exemplary teamwork within our Agile/Scrum development sprints.
 
 His conduct and performance during the internship tenure were outstanding. We wish him all the very best and continued success in his prospective academic and professional endeavors.
 
@@ -255,8 +255,8 @@ I further declare that:
   ],
   [
     .................................................... \
-    *Hasan Shahriar* \
-    Student ID: 2002126 \
+    *Shahriar Hasan* \
+    Student ID: 2002138 \
     Level: 4, Semester: II \
     Department of Electronics and Communication Engineering \
     Hajee Mohammad Danesh Science and Technology University
@@ -303,8 +303,8 @@ Finally, words cannot adequately express my lifelong gratitude to my parents and
 
 #v(1.5cm)
 #align(right)[
-  *Hasan Shahriar* \
-  Student ID: 2002126 \
+  *Shahriar Hasan* \
+  Student ID: 2002138 \
   HSTU, Dinajpur \
   October, 2026
 ]
