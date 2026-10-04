@@ -454,39 +454,108 @@ def create_test_pyramid_figure():
 
 # 9. Docker Multi-Stage Build
 def create_docker_multistage_figure():
-    fig, ax = plt.subplots(figsize=(10, 4.8), dpi=300)
+    fig, ax = plt.subplots(figsize=(12, 6.0), dpi=300)
     ax.set_facecolor(BG_LIGHT)
     fig.patch.set_facecolor('white')
     ax.axis('off')
 
-    ax.text(0.5, 0.94, "Multi-Stage Docker Container Build Optimization (83.1% Size Reduction)", 
-            ha='center', va='center', fontsize=12, fontweight='bold', color=DARK_BLUE)
+    ax.text(0.5, 0.95, "Multi-Stage Docker Container Build Optimization (83.1% Size Reduction)", 
+            ha='center', va='center', fontsize=13, fontweight='bold', color=DARK_BLUE)
+    ax.text(0.5, 0.89, "Decoupling Development Toolchain from Lean, Production-Hardened Runtime Environment",
+            ha='center', va='center', fontsize=9.5, color=TEXT_MUTED)
 
-    # Stage 1: Build Image
-    r1 = patches.FancyBboxPatch((0.10, 0.25), 0.32, 0.55, boxstyle="round,pad=0.02,rounding_size=0.03",
-                                facecolor='#FADBD8', edgecolor=ACCENT_RED, lw=1.5)
+    # Stage 1: Build Image Box
+    r1 = patches.FancyBboxPatch((0.04, 0.08), 0.30, 0.74, boxstyle="round,pad=0.015,rounding_size=0.03",
+                                facecolor='#FDEDEC', edgecolor=ACCENT_RED, lw=1.8)
     ax.add_patch(r1)
-    ax.text(0.26, 0.74, "Stage 1: Development Builder", ha='center', va='center', fontsize=9.5, fontweight='bold', color=ACCENT_RED)
-    ax.text(0.26, 0.65, "Base: node:20-alpine", ha='center', va='center', fontsize=8.5, color=TEXT_DARK)
-    ax.text(0.26, 0.50, "• Complete devDependencies\n• TypeScript Compiler (tsc)\n• NestJS CLI Tooling\n• Raw .ts source files\n• npm run build -> /dist",
-            ha='center', va='center', fontsize=8, color=TEXT_DARK)
-    ax.text(0.26, 0.32, "Image Footprint: ~840 MB", ha='center', va='center', fontsize=9, fontweight='bold', color=ACCENT_RED)
+    ax.text(0.19, 0.77, "Stage 1: Development Builder", ha='center', va='center', fontsize=11, fontweight='bold', color=ACCENT_RED)
+    ax.text(0.19, 0.72, "Base Image: node:20-alpine (as builder)", ha='center', va='center', fontsize=8.5, fontstyle='italic', color=TEXT_DARK)
+    
+    # Divider line
+    ax.plot([0.07, 0.31], [0.68, 0.68], color='#E6B0AA', lw=1.0)
 
-    # Arrow: Extract /dist only
-    ax.annotate("COPY --from=builder\n/app/dist ./dist\n(Discards 700MB build bloat)",
-                xy=(0.58, 0.52), xytext=(0.42, 0.52),
-                arrowprops=dict(arrowstyle="->", color=DARK_BLUE, lw=2.0),
-                fontsize=8, fontweight='bold', color=DARK_BLUE, va='center', ha='center')
+    s1_text = (
+        "• Full devDependencies installed\n"
+        "• TypeScript Compiler (tsc) & type defs\n"
+        "• NestJS CLI & source code maps\n"
+        "• Uncompiled raw .ts source files\n"
+        "• Build caches & temporary objects\n"
+        "• Compilation: npm run build -> /dist"
+    )
+    ax.text(0.065, 0.49, s1_text, ha='left', va='center', fontsize=8.2, color=TEXT_DARK, linespacing=1.65)
 
-    # Stage 2: Production Runner
-    r2 = patches.FancyBboxPatch((0.58, 0.25), 0.32, 0.55, boxstyle="round,pad=0.02,rounding_size=0.03",
-                                facecolor='#D5F5E3', edgecolor=SUCCESS_GREEN, lw=1.5)
+    # Stage 1 Footer Badge
+    r1_foot = patches.FancyBboxPatch((0.06, 0.12), 0.26, 0.10, boxstyle="round,pad=0.012,rounding_size=0.02",
+                                    facecolor='#FADBD8', edgecolor=ACCENT_RED, lw=1.2)
+    ax.add_patch(r1_foot)
+    ax.text(0.19, 0.17, "Intermediate Image Footprint: ~840 MB\n(Full Build Tooling & devDeps)", 
+            ha='center', va='center', fontsize=8.2, fontweight='bold', color=ACCENT_RED)
+
+    # Middle Bridge: Extraction & Filtering
+    # Transfer Box (Above)
+    trans_badge = patches.FancyBboxPatch((0.39, 0.52), 0.22, 0.20, boxstyle="round,pad=0.012,rounding_size=0.02",
+                                         facecolor='#EBF5FB', edgecolor=PRIMARY_BLUE, lw=1.6)
+    ax.add_patch(trans_badge)
+    ax.text(0.50, 0.67, "ARTIFACT EXTRACTION", ha='center', va='center', fontsize=8.2, fontweight='bold', color=DARK_BLUE)
+    ax.text(0.50, 0.60, "COPY --from=builder\n/app/dist   --->   ./dist", ha='center', va='center', 
+            fontsize=7.8, family='monospace', fontweight='bold', color=DARK_BLUE)
+    ax.text(0.50, 0.54, "(Only Compiled JS Retained)", ha='center', va='center', fontsize=7.2, fontstyle='italic', color=PRIMARY_BLUE)
+
+    # Arrow 1: Stage 1 -> Transfer Box
+    ax.annotate("", xy=(0.385, 0.62), xytext=(0.345, 0.62),
+                arrowprops=dict(arrowstyle="->", lw=2.2, color=DARK_BLUE))
+
+    # Arrow 2: Transfer Box -> Stage 2
+    ax.annotate("", xy=(0.655, 0.62), xytext=(0.615, 0.62),
+                arrowprops=dict(arrowstyle="->", lw=2.2, color=DARK_BLUE))
+
+    # Discard Badge (Below)
+    discard_badge = patches.FancyBboxPatch((0.39, 0.12), 0.22, 0.31, boxstyle="round,pad=0.012,rounding_size=0.02",
+                                           facecolor='#FFF9E6', edgecolor=ACCENT_ORANGE, linestyle='--', lw=1.5)
+    ax.add_patch(discard_badge)
+    ax.text(0.50, 0.38, "EXCLUDED FROM RELEASE", ha='center', va='center', fontsize=8.0, fontweight='bold', color=ACCENT_ORANGE)
+    ax.plot([0.41, 0.59], [0.35, 0.35], color='#F5CBA7', lw=0.8)
+    
+    discard_text = (
+        "✖ ~700 MB Tooling Bloat\n"
+        "✖ TypeScript Compiler (tsc)\n"
+        "✖ devDependencies Suite\n"
+        "✖ Raw Source Files (.ts)\n"
+        "✖ Build Cache & CLI Tools"
+    )
+    ax.text(0.50, 0.24, discard_text, ha='center', va='center', fontsize=7.5, color='#935116', linespacing=1.45)
+
+    # Downward arrow: Transfer step discards non-dist bloat
+    ax.annotate("", xy=(0.50, 0.445), xytext=(0.50, 0.505),
+                arrowprops=dict(arrowstyle="->", lw=1.8, color=ACCENT_ORANGE, linestyle='--'))
+    ax.text(0.515, 0.475, "Stripped", ha='left', va='center', fontsize=7.2, fontweight='bold', color=ACCENT_ORANGE)
+
+    # Stage 2: Production Runner Box
+    r2 = patches.FancyBboxPatch((0.66, 0.08), 0.30, 0.74, boxstyle="round,pad=0.015,rounding_size=0.03",
+                                facecolor='#EAFAF1', edgecolor=SUCCESS_GREEN, lw=1.8)
     ax.add_patch(r2)
-    ax.text(0.74, 0.74, "Stage 2: Production Runtime", ha='center', va='center', fontsize=9.5, fontweight='bold', color=SUCCESS_GREEN)
-    ax.text(0.74, 0.65, "Base: node:20-alpine", ha='center', va='center', fontsize=8.5, color=TEXT_DARK)
-    ax.text(0.74, 0.50, "• Production deps only (npm ci --omit=dev)\n• Compiled JavaScript (/dist)\n• Non-root secure 'node' user\n• Minimal attack surface\n• Fast deployment pull speed",
-            ha='center', va='center', fontsize=8, color=TEXT_DARK)
-    ax.text(0.74, 0.32, "Optimized Footprint: ~142 MB\n(83.1% Reduction)", ha='center', va='center', fontsize=9, fontweight='bold', color=SUCCESS_GREEN)
+    ax.text(0.81, 0.77, "Stage 2: Production Runtime", ha='center', va='center', fontsize=11, fontweight='bold', color=SUCCESS_GREEN)
+    ax.text(0.81, 0.72, "Base Image: node:20-alpine (clean release)", ha='center', va='center', fontsize=8.5, fontstyle='italic', color=TEXT_DARK)
+
+    # Divider line
+    ax.plot([0.69, 0.93], [0.68, 0.68], color='#A9DFBF', lw=1.0)
+
+    s2_text = (
+        "• Production deps only (npm ci --omit=dev)\n"
+        "• Pre-compiled /dist JavaScript files\n"
+        "• Hardened non-root user (USER node)\n"
+        "• Drastically minimized CVE attack surface\n"
+        "• Minimal OS & memory overhead\n"
+        "• Fast deployment push/pull times"
+    )
+    ax.text(0.685, 0.49, s2_text, ha='left', va='center', fontsize=8.2, color=TEXT_DARK, linespacing=1.65)
+
+    # Stage 2 Footer Badge
+    r2_foot = patches.FancyBboxPatch((0.68, 0.12), 0.26, 0.10, boxstyle="round,pad=0.012,rounding_size=0.02",
+                                    facecolor='#D5F5E3', edgecolor=SUCCESS_GREEN, lw=1.2)
+    ax.add_patch(r2_foot)
+    ax.text(0.81, 0.17, "Optimized Release Footprint: ~142 MB\n(83.1% Image Size Reduction)", 
+            ha='center', va='center', fontsize=8.2, fontweight='bold', color=SUCCESS_GREEN)
 
     plt.tight_layout()
     fig.savefig(os.path.join(OUTPUT_DIR, "docker_multistage_build.png"), bbox_inches='tight')
