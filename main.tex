@@ -1,0 +1,80 @@
+\documentclass[12pt,a4paper,oneside]{report}
+
+% Include custom professional HSTU internship report styling
+\usepackage{internship}
+
+\begin{document}
+
+% ─────────────────────────────────────────────────────────────
+% FRONT MATTER (ROMAN NUMBERING)
+% ─────────────────────────────────────────────────────────────
+\pagenumbering{roman}
+
+% 1. Official HSTU Title Page
+\input{frontmatter/title_page}
+\clearpage
+
+% 2. Letter of Transmittal
+\input{frontmatter/letter_of_transmittal}
+\clearpage
+
+% 3. Official Academic Supervisor Certificate
+\input{frontmatter/certificate_academic}
+\clearpage
+
+% 4. Host Organization Industrial Certificate
+\input{frontmatter/certificate_industrial}
+\clearpage
+
+% 5. Candidate's Declaration
+\input{frontmatter/declaration}
+\clearpage
+
+% 6. Dedication
+\input{frontmatter/dedication}
+\clearpage
+
+% 7. Acknowledgements
+\input{frontmatter/acknowledgements}
+\clearpage
+
+% 8. Executive Summary / Abstract
+\input{frontmatter/abstract}
+\clearpage
+
+% 9. Table of Contents, Lists of Tables & Figures
+\tableofcontents
+\clearpage
+
+\listoftables
+\clearpage
+
+\listoffigures
+\clearpage
+
+% 10. List of Acronyms & Abbreviations
+\input{config/acronyms}
+\clearpage
+
+% ─────────────────────────────────────────────────────────────
+% MAIN BODY CHAPTERS (ARABIC NUMBERING)
+% ─────────────────────────────────────────────────────────────
+\pagenumbering{arabic}
+\onehalfspacing
+
+\input{chapters/ch01_introduction}
+\input{chapters/ch02_organization_profile}
+\input{chapters/ch03_technical_foundations}
+\input{chapters/ch04_system_architecture}
+\input{chapters/ch05_backend_implementation}
+\input{chapters/ch06_testing_deployment}
+\input{chapters/ch07_professional_experience}
+\input{chapters/ch08_conclusion_future_work}
+
+% ─────────────────────────────────────────────────────────────
+% BIBLIOGRAPHY
+% ─────────────────────────────────────────────────────────────
+\clearpage
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,524 @@
+% ─────────────────────────────────────────────────────────────
+% CHAPTER 5: DESIGN & IMPLEMENTATION OF BACKEND SERVICES
+% ─────────────────────────────────────────────────────────────
+\chapter{Design \& Implementation of Backend Services}
+\label{ch:backend_implementation}
+
+\section{Project Directory Structure and Modular Organization}
+\label{sec:impl_structure}
+
+To ensure long-term maintainability, testability, and adherence to clean code standards, the backend systems implemented at Digicon follow a strictly modular, layered directory hierarchy. Both the CRM Support Ticket platform and the Enterprise SMS Gateway microservice adhere to standardized architectural conventions. Listing~\ref{lst:project_structure} illustrates the standardized workspace layout.
+
+\begin{lstlisting}[language=bash, caption={Modular Backend Project Directory Layout.}, label={lst:project_structure}]
+src/
+|-- common/                  # Cross-cutting concerns & shared utilities
+|   |-- decorators/          # Custom parameter & metadata decorators (@Roles, @CurrentUser)
+|   |-- filters/             # Global HTTP exception filters
+|   |-- guards/              # Authentication & RBAC authorization guards
+|   |-- interceptors/        # Logging, response transformation, & caching interceptors
+|   |-- middlewares/         # Rate limiting, correlation IDs, & security headers
+|-- config/                  # Environment variable validation & database configs
+|-- modules/                 # Functional domain modules
+|   |-- auth/                # Authentication, password hashing, & JWT issuance
+|   |   |-- dto/             # LoginDto, RegisterDto, RefreshTokenDto
+|   |   |-- auth.controller.ts
+|   |   |-- auth.service.ts
+|   |   |-- jwt.strategy.ts
+|   |-- tickets/             # CRM Ticket lifecycle engine
+|   |   |-- dto/             # CreateTicketDto, UpdateStatusDto, AssignTicketDto
+|   |   |-- schemas/         # Mongoose Ticket & AuditLog document schemas
+|   |   |-- ticket.controller.ts
+|   |   |-- ticket.service.ts
+|   |   |-- ticket.repository.ts
+|   |-- sms/                 # Enterprise SMS gateway & queue dispatch
+|   |   |-- dto/             # DispatchSmsDto, WebhookDlrDto
+|   |   |-- entities/        # Prisma/TypeORM PostgreSQL entity mappings
+|   |   |-- sms.controller.ts
+|   |   |-- sms.service.ts
+|   |   |-- sms.producer.ts  # BullMQ job enqueuer
+|   |   |-- sms.worker.ts    # Background queue consumer
+|   |-- cache/               # Redis in-memory cache-aside manager
+|       |-- cache.service.ts
+|-- main.ts                  # Application bootstrap, Swagger setup, & global pipes
+\end{lstlisting}
+
+\section{Implementation of Authentication, JWT, and RBAC Middleware}
+\label{sec:impl_auth}
+
+Stateless security is enforced across all API endpoints using JSON Web Tokens (JWT) coupled with declarative Role-Based Access Control (RBAC) guards.
+
+\subsection{JWT Authentication Strategy}
+When an incoming HTTP request reaches a protected route, the \texttt{JwtAuthGuard} intercepts the execution context and delegates token verification to the \texttt{JwtStrategy}. Listing~\ref{lst:jwt_strategy} presents the implementation of the passport-based JWT strategy.
+
+\begin{lstlisting}[caption={Implementation of the Stateless JWT Verification Strategy.}, label={lst:jwt_strategy}]
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { ConfigService } from '@nestjs/config';
+
+export interface JwtPayload {
+  sub: string;        // User UUID
+  email: string;      // User Email Address
+  role: string;       // Role identifier (e.g., 'TEAM_LEAD')
+  permissions: string[];
+}
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor(private readonly configService: ConfigService) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: configService.get<string>('JWT_SECRET_KEY'),
+    });
+  }
+
+  async validate(payload: JwtPayload) {
+    if (!payload || !payload.sub) {
+      throw new UnauthorizedException('Malformed or expired authentication token');
+    }
+    // Inject validated user context into Express Request object (req.user)
+    return {
+      userId: payload.sub,
+      email: payload.email,
+      role: payload.role,
+      permissions: payload.permissions,
+    };
+  }
+}
+\end{lstlisting}
+
+\subsection{Declarative RBAC Authorization Guard}
+Endpoint access permissions are declared using custom TypeScript metadata decorators (e.g., \texttt{@Roles('SUPER\_ADMIN', 'TEAM\_LEAD')}). Listing~\ref{lst:roles_guard} demonstrates the execution guard that enforces this policy at runtime.
+
+\begin{lstlisting}[caption={Declarative Role-Based Access Control (RBAC) Guard.}, label={lst:roles_guard}]
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride<string[]>('roles', [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    // If no specific roles are mandated, allow authenticated access
+    if (!requiredRoles || requiredRoles.length === 0) {
+      return true;
+    }
+
+    const { user } = context.switchToHttp().getRequest();
+    if (!user || !user.role) {
+      throw new ForbiddenException('Access denied: Unauthenticated user context');
+    }
+
+    const hasPermission = requiredRoles.includes(user.role);
+    if (!hasPermission) {
+      throw new ForbiddenException(
+        `Insufficient privileges: Role '${user.role}' is unauthorized for this endpoint`
+      );
+    }
+
+    return true;
+  }
+}
+\end{lstlisting}
+
+\section{Implementation of the CRM Support Ticket Routing Engine}
+\label{sec:impl_crm}
+
+The CRM Support Ticket platform handles customer issues arriving across Digicon's BPO contact center channels. The implementation leverages MongoDB via Mongoose to accommodate semi-structured customer case parameters.
+
+\subsection{Ticket Controller Implementation}
+The controller defines RESTful endpoints, enforces authorization guards, and validates client input through Data Transfer Objects (DTOs) decorated with \texttt{class-validator} annotations. Listing~\ref{lst:ticket_controller} details the controller methods for ticket ingestion and atomic agent assignment.
+
+\begin{lstlisting}[caption={RESTful Ticket Management Controller.}, label={lst:ticket_controller}]
+import { Controller, Post, Body, Patch, Param, UseGuards, Req, HttpStatus, HttpCode } from '@nestjs/common';
+import { TicketService } from './ticket.service';
+import { CreateTicketDto, AssignTicketDto } from './dto/ticket.dto';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
+
+@Controller('api/v1/tickets')
+@UseGuards(JwtAuthGuard, RolesGuard)
+export class TicketController {
+  constructor(private readonly ticketService: TicketService) {}
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  @Roles('SUPER_ADMIN', 'TEAM_LEAD', 'SUPPORT_AGENT')
+  async createTicket(@Body() createTicketDto: CreateTicketDto, @Req() req: any) {
+    const creatorId = req.user.userId;
+    return await this.ticketService.create(createTicketDto, creatorId);
+  }
+
+  @Patch(':id/assign')
+  @HttpCode(HttpStatus.OK)
+  @Roles('SUPER_ADMIN', 'TEAM_LEAD')
+  async assignTicket(
+    @Param('id') ticketId: string,
+    @Body() assignTicketDto: AssignTicketDto,
+    @Req() req: any
+  ) {
+    const supervisorId = req.user.userId;
+    return await this.ticketService.assign(ticketId, assignTicketDto.agentId, supervisorId);
+  }
+}
+\end{lstlisting}
+
+\subsection{Ticket Service Business Logic and SLA Computation}
+The service layer implements business rules, including automated SLA calculation and optimistic concurrency control. Listing~\ref{lst:ticket_service} illustrates the core service logic.
+
+\begin{lstlisting}[caption={Ticket Service with SLA Calculation and Optimistic Locking.}, label={lst:ticket_service}]
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Ticket, TicketDocument } from './schemas/ticket.schema';
+import { CreateTicketDto } from './dto/ticket.dto';
+import { CacheService } from '../cache/cache.service';
+
+@Injectable()
+export class TicketService {
+  constructor(
+    @InjectModel(Ticket.name) private ticketModel: Model<TicketDocument>,
+    private readonly cacheService: CacheService,
+  ) {}
+
+  async create(dto: CreateTicketDto, creatorId: string): Promise<Ticket> {
+    const slaHours = this.calculateSlaWindow(dto.priority);
+    const slaBreachTime = new Date(Date.now() + slaHours * 3600 * 1000);
+
+    const ticketNumber = `TCK-${Date.now().toString().slice(-6)}-${Math.floor(100 + Math.random() * 900)}`;
+
+    const newTicket = new this.ticketModel({
+      ...dto,
+      ticketNumber,
+      status: 'OPEN',
+      createdBy: creatorId,
+      slaBreachAt: slaBreachTime,
+      version: 1,
+    });
+
+    const savedTicket = await newTicket.save();
+    
+    // Invalidate cached ticket summaries
+    await this.cacheService.invalidatePattern('tickets:summary:*');
+    return savedTicket;
+  }
+
+  async assign(ticketId: string, agentId: string, supervisorId: string): Promise<Ticket> {
+    const existing = await this.ticketModel.findById(ticketId);
+    if (!existing) {
+      throw new NotFoundException(`Ticket with ID ${ticketId} not found`);
+    }
+
+    // Optimistic Concurrency Control using version field
+    const updated = await this.ticketModel.findOneAndUpdate(
+      { _id: ticketId, version: existing.version },
+      {
+        $set: { assignedAgentId: agentId, status: 'IN_PROGRESS', updatedAt: new Date() },
+        $inc: { version: 1 },
+        $push: {
+          auditLogs: {
+            action: 'ASSIGNMENT',
+            performedBy: supervisorId,
+            assignedTo: agentId,
+            timestamp: new Date(),
+          },
+        },
+      },
+      { new: true }
+    );
+
+    if (!updated) {
+      throw new ConflictException('Concurrent update conflict: Ticket was modified by another user');
+    }
+
+    return updated;
+  }
+
+  private calculateSlaWindow(priority: string): number {
+    switch (priority) {
+      case 'CRITICAL': return 2;  // 2 hours SLA
+      case 'HIGH':     return 6;  // 6 hours SLA
+      case 'MEDIUM':   return 24; // 24 hours SLA
+      default:         return 72; // 72 hours SLA for LOW
+    }
+  }
+}
+\end{lstlisting}
+
+\section{Implementation of the Enterprise SMS Gateway Microservice}
+\label{sec:impl_sms}
+
+The SMS Gateway microservice is engineered to decouple high-volume outbound messaging from downstream carrier response latencies. It integrates the BullMQ message queue and a custom Token Bucket rate limiter.
+
+\subsection{Token Bucket Rate Limiting Algorithm}
+To adhere strictly to Bangladesh Telecommunication Regulatory Commission (BTRC) compliance and prevent carrier API flooding (HTTP 429), a Token Bucket rate limiter was implemented in Redis. The algorithm continuously replenishes tokens into a bucket at a fixed rate $R$ up to capacity $C$. Inbound dispatches consume tokens atomically via Lua scripts. Listing~\ref{lst:token_bucket} shows the implementation.
+
+\begin{lstlisting}[caption={Token Bucket Rate Limiter Implementation in TypeScript.}, label={lst:token_bucket}]
+import { Injectable } from '@nestjs/common';
+import Redis from 'ioredis';
+
+@Injectable()
+export class TokenBucketLimiter {
+  constructor(private readonly redis: Redis) {}
+
+  async acquireToken(key: string, capacity: number, fillRatePerSec: number): Promise<boolean> {
+    const now = Date.now();
+    // Atomic Lua script ensures thread-safe token evaluation in Redis
+    const luaScript = `
+      local key = KEYS[1]
+      local capacity = tonumber(ARGV[1])
+      local fill_rate = tonumber(ARGV[2])
+      local now = tonumber(ARGV[3])
+      
+      local data = redis.call('HMGET', key, 'tokens', 'last_updated')
+      local tokens = tonumber(data[1])
+      local last_updated = tonumber(data[2])
+      
+      if not tokens then
+        tokens = capacity
+        last_updated = now
+      else
+        local delta = math.max(0, (now - last_updated) / 1000)
+        tokens = math.min(capacity, tokens + delta * fill_rate)
+        last_updated = now
+      end
+      
+      if tokens >= 1 then
+        tokens = tokens - 1
+        redis.call('HMSET', key, 'tokens', tokens, 'last_updated', last_updated)
+        redis.call('EXPIRE', key, 60)
+        return 1
+      else
+        redis.call('HMSET', key, 'tokens', tokens, 'last_updated', last_updated)
+        return 0
+      end
+    `;
+
+    const result = await this.redis.eval(luaScript, 1, `limiter:${key}`, capacity, fillRatePerSec, now);
+    return result === 1;
+  }
+}
+\end{lstlisting}
+
+\subsection{BullMQ Queue Producer and Consumer Worker}
+Outbound message requests are rapidly enqueued by the Producer service, as shown in Listing~\ref{lst:sms_queue}.
+
+\begin{lstlisting}[caption={SMS Queue Producer and Asynchronous Worker Implementation.}, label={lst:sms_queue}]
+import { Injectable, Logger } from '@nestjs/common';
+import { Queue, Worker, Job } from 'bullmq';
+import { ConfigService } from '@nestjs/config';
+import axios from 'axios';
+
+@Injectable()
+export class SmsQueueProducer {
+  private queue: Queue;
+
+  constructor(private configService: ConfigService) {
+    this.queue = new Queue('sms-dispatch-queue', {
+      connection: {
+        host: configService.get<string>('REDIS_HOST'),
+        port: configService.get<number>('REDIS_PORT'),
+      },
+    });
+  }
+
+  async enqueueSms(recipient: string, message: string, trackingId: string) {
+    await this.queue.add(
+      'send-sms',
+      { recipient, message, trackingId },
+      {
+        attempts: 3,
+        backoff: {
+          type: 'exponential',
+          delay: 2000, // 2s, 4s, 8s backoff
+        },
+        removeOnComplete: true,
+        removeOnFail: false,
+      }
+    );
+  }
+}
+
+// Background Worker Service
+@Injectable()
+export class SmsQueueWorker {
+  private worker: Worker;
+  private readonly logger = new Logger(SmsQueueWorker.name);
+
+  constructor(configService: ConfigService) {
+    this.worker = new Worker(
+      'sms-dispatch-queue',
+      async (job: Job) => {
+        const { recipient, message, trackingId } = job.data;
+        this.logger.log(`Dispatching SMS to ${recipient} (Tracking ID: ${trackingId})`);
+        
+        // Execute HTTP POST to carrier SMPP/HTTP Gateway
+        const response = await axios.post(configService.get('TELCO_GATEWAY_URL'), {
+          msisdn: recipient,
+          text: message,
+          transaction_id: trackingId,
+        }, { timeout: 4000 });
+
+        return response.data;
+      },
+      {
+        concurrency: 20, // 20 parallel worker threads per process
+        connection: {
+          host: configService.get('REDIS_HOST'),
+          port: configService.get('REDIS_PORT'),
+        },
+      }
+    );
+
+    this.worker.on('failed', (job, err) => {
+      this.logger.error(`Job ${job?.id} failed with error: ${err.message}`);
+    });
+  }
+}
+\end{lstlisting}
+
+\subsection{Cryptographic Webhook Signature Verification}
+When telecommunication operators send asynchronous Delivery Receipts (DLR), an HMAC-SHA256 signature middleware validates the payload authenticity to prevent spoofing, as demonstrated in Listing~\ref{lst:webhook_verifier}.
+
+\begin{lstlisting}[caption={HMAC-SHA256 Webhook Cryptographic Verification Middleware.}, label={lst:webhook_verifier}]
+import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+import * as crypto from 'crypto';
+
+@Injectable()
+export class WebhookSignatureMiddleware implements NestMiddleware {
+  private readonly secret = process.env.TELCO_WEBHOOK_SECRET || 'secret-key';
+
+  use(req: Request, res: Response, next: NextFunction) {
+    const signature = req.headers['x-telco-signature'] as string;
+    if (!signature) {
+      throw new UnauthorizedException('Missing carrier cryptographic signature header');
+    }
+
+    const payload = JSON.stringify(req.body);
+    const expectedSignature = crypto
+      .createHmac('sha256', this.secret)
+      .update(payload)
+      .digest('hex');
+
+    // Use timingSafeEqual to guard against timing attacks
+    const isValid = crypto.timingSafeEqual(
+      Buffer.from(signature, 'utf8'),
+      Buffer.from(expectedSignature, 'utf8')
+    );
+
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid cryptographic signature: Tampered payload');
+    }
+
+    next();
+  }
+}
+\end{lstlisting}
+
+\section{Distributed Caching Implementation with Redis}
+\label{sec:impl_caching}
+
+To satisfy NFR-02 (sub-50ms latency), a generalized Cache-Aside service was implemented. The service manages serialized JSON data, TTL expiration, and pattern-based cache invalidation. Listing~\ref{lst:cache_service} presents the implementation.
+
+\begin{lstlisting}[caption={Redis Cache-Aside Service Implementation.}, label={lst:cache_service}]
+import { Injectable, Logger } from '@nestjs/common';
+import Redis from 'ioredis';
+
+@Injectable()
+export class CacheService {
+  private readonly redis: Redis;
+  private readonly logger = new Logger(CacheService.name);
+
+  constructor() {
+    this.redis = new Redis({
+      host: process.env.REDIS_HOST || '127.0.0.1',
+      port: Number(process.env.REDIS_PORT) || 6379,
+    });
+  }
+
+  async getOrSet<T>(key: string, ttlSeconds: number, fetcher: () => Promise<T>): Promise<T> {
+    try {
+      const cached = await this.redis.get(key);
+      if (cached) {
+        return JSON.parse(cached) as T;
+      }
+    } catch (err) {
+      this.logger.warn(`Redis read error on key ${key}: ${err.message}`);
+    }
+
+    // Cache Miss: Execute primary database fetcher function
+    const freshData = await fetcher();
+
+    try {
+      if (freshData !== null && freshData !== undefined) {
+        await this.redis.set(key, JSON.stringify(freshData), 'EX', ttlSeconds);
+      }
+    } catch (err) {
+      this.logger.warn(`Redis write error on key ${key}: ${err.message}`);
+    }
+
+    return freshData;
+  }
+
+  async invalidatePattern(pattern: string): Promise<void> {
+    const keys = await this.redis.keys(pattern);
+    if (keys.length > 0) {
+      await this.redis.del(...keys);
+      this.logger.log(`Invalidated ${keys.length} keys matching pattern: ${pattern}`);
+    }
+  }
+}
+\end{lstlisting}
+
+\section{Global Error Handling and Centralized Logging}
+\label{sec:impl_error_logging}
+
+In enterprise environments, unhandled exceptions can leak internal stack traces and compromise security. A global HTTP exception filter was implemented to catch all anomalies and format them into standardized JSON error structures in conformance with RFC 7807 (Problem Details for HTTP APIs). Listing~\ref{lst:exception_filter} shows the global exception filter.
+
+\begin{lstlisting}[caption={Global Centralized HTTP Exception Filter.}, label={lst:exception_filter}]
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { Request, Response } from 'express';
+
+@Catch()
+export class GlobalExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(GlobalExceptionFilter.name);
+
+  catch(exception: unknown, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
+
+    const status =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
+
+    const message =
+      exception instanceof HttpException
+        ? exception.getResponse()
+        : 'Internal server error encountered';
+
+    const errorPayload = {
+      statusCode: status,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+      method: request.method,
+      error: typeof message === 'object' ? message : { message },
+    };
+
+    this.logger.error(
+      `HTTP ${status} [${request.method} ${request.url}]: ${JSON.stringify(errorPayload)}`
+    );
+
+    response.status(status).json(errorPayload);
+  }
+}
+\end{lstlisting}
