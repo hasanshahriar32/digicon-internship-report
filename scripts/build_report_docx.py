@@ -81,7 +81,7 @@ def build_docx():
     p_course = doc.add_paragraph()
     p_course.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_course.paragraph_format.space_before = Pt(18)
-    run_course = p_course.add_run("Course Code: ECE 450    Course Title: Industrial Training / Internship\n")
+    run_course = p_course.add_run("Course Code: ECE 400    Course Title: Internship / Project\n")
     run_course.font.size = Pt(12)
     run_course.font.bold = True
 
@@ -199,7 +199,7 @@ def build_docx():
     add_chapter_title("Chapter 1: Introduction")
     add_section_title("1.1 Background and Context of Industrial Attachment")
     p = doc.add_paragraph()
-    p.add_run("In modern communication engineering, theoretical academia is synthesized into practice through enterprise software engineering. The BSc in Electronics and Communication Engineering curriculum at HSTU incorporates a mandatory credit-bearing Industrial Training / Internship (Course Code: ECE 450). The author completed this industrial attachment at Digicon Technologies PLC, a pioneer BPO and IT solutions conglomerate in Dhaka, Bangladesh, employing over 1,500 FTEs across modern contact center and software engineering facilities.")
+    p.add_run("In modern communication engineering, theoretical academia is synthesized into practice through enterprise software engineering. The BSc in Electronics and Communication Engineering curriculum at HSTU incorporates a mandatory credit-bearing Internship / Project (Course Code: ECE 400). The author completed this industrial attachment at Digicon Technologies PLC, a pioneer BPO and IT solutions conglomerate in Dhaka, Bangladesh, employing over 1,500 FTEs across modern contact center and software engineering facilities.")
 
     add_section_title("1.2 Purpose and Specific Objectives")
     p = doc.add_paragraph()

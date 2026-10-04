@@ -70,7 +70,7 @@
   #text(size: 16pt, weight: "bold")[BACKEND WEB DEVELOPMENT USING JAVASCRIPT FRAMEWORKS AT DIGICON TECHNOLOGIES PLC]
   
   #v(0.8fr)
-  #text(size: 11.5pt, weight: "bold")[Course Code: ECE 450 #h(0.8cm) Course Title: Industrial Training / Internship]
+  #text(size: 11.5pt, weight: "bold")[Course Code: ECE 400 #h(0.8cm) Course Title: Internship / Project]
   
   #v(0.8fr)
   #text(size: 11.5pt, weight: "bold")[Submitted By---] \
