@@ -54,6 +54,16 @@ The architecture is partitioned into cleanly decoupled tiers:
 - *Data Access & Caching Tier:* Encapsulates persistence logic. The _Mongoose ODM_ interfaces with MongoDB for unstructured ticket documents. _Prisma / TypeORM_ executes relational queries against PostgreSQL for user identities and audit logs. The _Redis Layer_ serves a dual role: caching frequently read entities and powering the _BullMQ_ distributed message broker.
 - *External Infrastructure Tier:* Comprises underlying bare-metal Linux servers executing containerized Docker workloads, managed PostgreSQL/MongoDB database clusters, and external telecommunication carrier SMPP/HTTP endpoints.
 
+=== Controller-Service-Repository Tiered Pattern
+
+To enforce clean separation of concerns across application layers, each core service strictly adheres to the Controller-Service-Repository (CSR) architectural pattern. As illustrated in @fig:crm_csr_pattern, HTTP concerns are isolated within controllers, business rules are encapsulated in injectable services, and persistent I/O operations are abstracted behind dedicated repository layers.
+
+#figure(
+  image("figures/crm_csr_pattern.png", width: 95%),
+  caption: [Controller-Service-Repository (CSR) Tiered Architectural Flow.]
+) <fig:crm_csr_pattern>
+
+
 == Database Schema and Data Modeling <sec:arch_db_schema>
 
 
@@ -111,7 +121,14 @@ The SMS Gateway microservice was designed to address high-volume message deliver
 
 === Pipeline Mechanics
 
-- *Ingestion & Rate Limiting:* Clients initiate single or bulk SMS dispatch requests via HTTPS. The request passes through an in-memory *Token Bucket Rate Limiter* implemented via Redis atomic operations, guaranteeing that inbound client traffic does not overwhelm internal capacity.
+- *Ingestion & Rate Limiting:* Clients initiate single or bulk SMS dispatch requests via HTTPS. The request passes through an in-memory *Token Bucket Rate Limiter* implemented via Redis atomic operations, guaranteeing that inbound client traffic does not overwhelm internal capacity. @fig:token_bucket_algorithm details the continuous token replenishment and consumption evaluation logic enforced on incoming requests.
+
+#figure(
+  image("figures/token_bucket_algorithm.png", width: 95%),
+  caption: [Token Bucket Rate Limiting Algorithm Execution Flow.]
+) <fig:token_bucket_algorithm>
+
+
 - *Queue Decoupling (Producer):* The API service acts as a producer, persisting initial message metadata into PostgreSQL and enqueuing jobs into the *BullMQ Redis Queue*. The HTTP connection immediately terminates with an HTTP `202 Accepted` response and tracking UUID, freeing the client from carrier latency.
 - *Parallel Worker Pool (Consumer):* Clustered BullMQ worker processes continuously pull pending jobs from Redis. Workers format the payload to carrier-specific SMPP or HTTP protocols, execute telco routing, and dispatch messages across direct interconnects with Bangladesh operators (Grameenphone, Robi, Banglalink, Teletalk).
 - *Retry with Exponential Backoff:* If a telecom carrier endpoint returns a transient network timeout or HTTP 5xx error, BullMQ automatically schedules retries using an exponential backoff formula:

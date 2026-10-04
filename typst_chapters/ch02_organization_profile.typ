@@ -89,7 +89,13 @@ Under the CTO, the *Head of Software Engineering* directs the day-to-day softwar
 == Software Engineering Lifecycle and Methodology <sec:org_sdlc>
 
 
-Software engineering at Digicon follows a disciplined, 8-phase development methodology tailored to harmonize enterprise client expectations with rapid technological execution:
+Software engineering at Digicon follows a disciplined, 8-phase development methodology tailored to harmonize enterprise client expectations with rapid technological execution, orchestrated through structured two-week Agile/Scrum sprints as illustrated in @fig:scrum_sprint_lifecycle:
+
+#figure(
+  image("figures/scrum_sprint_lifecycle.png", width: 95%),
+  caption: [Digicon Agile/Scrum Sprint and Code Review Lifecycle.]
+) <fig:scrum_sprint_lifecycle>
+
 
 - *Phase 1: Client Idea & Conceptualization:* Initial stakeholder consultations to identify core operational pain points, high-level business goals, and strategic opportunities.
 - *Phase 2: Business Analysis & Requirement Specification:* Business analysts and software architects decompose client requirements into formal Software Requirement Specifications (SRS), capturing user stories, data schemas, and non-functional constraints.

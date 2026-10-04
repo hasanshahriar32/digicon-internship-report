@@ -54,18 +54,20 @@ Encountering unexpected runtime anomalies and debugging complex distributed syst
 \textbf{Symptom:} In high-volume contact center shifts, two team supervisors would occasionally assign the same incoming ticket to two different support agents simultaneously, causing dual notifications and conflicting audit log entries.
 
 \textbf{Root-Cause Analysis:} The ticket assignment routine initially followed a naive \textit{Read-Modify-Write} sequence:
-\begin{equation}
-    \text{Supervisor A Reads Ticket} \longrightarrow \text{Supervisor B Reads Ticket} \longrightarrow \text{A Writes Assignee} \longrightarrow \text{B Overwrites Assignee}
-\end{equation}
+\begin{align}
+    \text{Supervisor A Reads} &\longrightarrow \text{Supervisor B Reads} \nonumber \\
+    &\longrightarrow \text{A Writes Assignee} \longrightarrow \text{B Overwrites Assignee}
+\end{align}
 Because both transactions read the ticket state before either write completed, the second update silently overwrote the first without detection.
 
 \textbf{Engineering Resolution:}
 \begin{itemize}
     \item Implemented \textbf{Optimistic Concurrency Control (OCC)} in MongoDB using an atomic document \texttt{version} field.
     \item Modified the update query to atomically match both the ticket ID and its current version:
-    \begin{equation}
-        \text{Query: } \{\text{id}: \text{ticketId}, \text{version}: v\} \quad \Longrightarrow \quad \text{Update: } \{\text{\$set}: \{\text{agentId}: \text{newAgent}\}, \text{\$inc}: \{\text{version}: 1\}\}
-    \end{equation}
+    \begin{align}
+        \text{Match: } &\{\text{id}: \text{ticketId}, \text{version}: v\} \nonumber \\
+        \Longrightarrow \text{Update: } &\{\text{\$set}: \{\text{agentId}: \text{newAgent}\}, \text{\$inc}: \{\text{version}: 1\}\}
+    \end{align}
     \item If another user mutates the ticket first, the version increments to $v+1$. The second transaction's update matches zero documents and immediately throws an HTTP \texttt{409 ConflictException}, prompting the user to refresh their view.
 \end{itemize}
 

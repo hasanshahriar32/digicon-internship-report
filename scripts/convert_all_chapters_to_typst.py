@@ -74,8 +74,12 @@ def convert_math_to_typst(math_str):
         return '"JWT" = underbrace("Base64Url"("Header"), "Algorithm & Token Type") || "." || underbrace("Base64Url"("Payload"), "Claims: User ID, Role, Expiry") || "." || underbrace("HMAC-SHA256"("Header" || "Payload", "Secret"), "Cryptographic Digital Signature")'
     if "T_{\\text{wait}}" in s or 'T_"wait"' in s:
         return 'T_"wait" = T_"base" times 2^"attempt" + "jitter"'
+    if "Supervisor A Reads" in s:
+        return '"Supervisor A Reads" &--> "Supervisor B Reads" \\\n  &--> "A Writes Assignee" --> "B Overwrites Assignee"'
     if "Supervisor A Reads Ticket" in s:
         return '"Supervisor A Reads Ticket" --> "Supervisor B Reads Ticket" --> "A Writes Assignee" --> "B Overwrites Assignee"'
+    if "ticketId" in s and ("Match:" in s or "Query:" in s):
+        return '"Match: " &{"id": "ticketId", "version": v} \\\n  ==> "Update: " &{"$set": {"agentId": "newAgent"}, "$inc": {"version": 1}}'
     if "Query:" in s:
         return '"Query: " {"id": "ticketId", "version": v} ==> "Update: " {"$set": {"agentId": "newAgent"}, "$inc": {"version": 1}}'
     
@@ -250,7 +254,27 @@ def convert_chapter_file(tex_path):
             tbl_lines.append(lines[i] if i < len(lines) else "")
             tbl_full = '\n'.join(tbl_lines)
             
-            if "Express.js versus NestJS" in tbl_full or "tab:express_vs_nestjs" in tbl_full:
+            if "tab:event_loop_phases" in tbl_full or "Event Loop Operational Phases" in tbl_full or "tab:event_loop_phases" in tbl_full:
+                typst_tbl = """#figure(
+  table(
+    columns: (auto, 1fr),
+    align: (left, left),
+    stroke: 0.5pt + luma(180),
+    table.header([*Phase*], [*Operational Function and Responsibilities*]),
+    [*Timers*], [Executes callbacks scheduled by `setTimeout()` and `setInterval()`.],
+    [*Pending I/O*], [Executes I/O callbacks deferred from the previous loop iteration.],
+    [*Idle, Prepare*], [Internal runtime routines utilized exclusively by the Libuv subsystem.],
+    [*Poll*], [Retrieves new I/O events, executes I/O-related callbacks, and blocks if empty.],
+    [*Check*], [Executes callbacks invoked via `setImmediate()`.],
+    [*Close Callbacks*], [Handles abrupt connection closures (e.g., `socket.on('close')`).]
+  ),
+  caption: [Functional Responsibilities of Event Loop Phases.]
+) <tab:event_loop_phases>"""
+                out_lines.append(typst_tbl)
+                out_lines.append('')
+                i += 1
+                continue
+            elif "Express.js versus NestJS" in tbl_full or "tab:express_vs_nestjs" in tbl_full:
                 typst_tbl = """#figure(
   table(
     columns: (1.5fr, 2fr, 2fr),
@@ -291,11 +315,12 @@ def convert_chapter_file(tex_path):
                 i += 1
                 continue
 
-        # 5. Equation: \begin{equation} ... \end{equation}
-        if r'\begin{equation}' in trimmed:
+        # 5. Equation or Align: \begin{equation} ... \end{equation} or \begin{align} ... \end{align}
+        if r'\begin{equation}' in trimmed or r'\begin{align}' in trimmed or r'\begin{align*}' in trimmed:
+            end_tag = r'\end{align*}' if r'\begin{align*}' in trimmed else (r'\end{align}' if r'\begin{align}' in trimmed else r'\end{equation}')
             eq_lines = []
             i += 1
-            while i < len(lines) and r'\end{equation}' not in lines[i]:
+            while i < len(lines) and end_tag not in lines[i]:
                 eq_lines.append(lines[i])
                 i += 1
             eq_text = ' '.join(eq_lines)

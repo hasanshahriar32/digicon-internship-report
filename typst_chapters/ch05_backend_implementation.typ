@@ -9,34 +9,13 @@ To ensure long-term maintainability, testability, and adherence to clean code st
 #figure(
 ```bash
 src/
-|-- common/                  # Cross-cutting concerns & shared utilities
-|   |-- decorators/          # Custom parameter & metadata decorators (@Roles, @CurrentUser)
-|   |-- filters/             # Global HTTP exception filters
-|   |-- guards/              # Authentication & RBAC authorization guards
-|   |-- interceptors/        # Logging, response transformation, & caching interceptors
-|   |-- middlewares/         # Rate limiting, correlation IDs, & security headers
-|-- config/                  # Environment variable validation & database configs
-|-- modules/                 # Functional domain modules
-|   |-- auth/                # Authentication, password hashing, & JWT issuance
-|   |   |-- dto/             # LoginDto, RegisterDto, RefreshTokenDto
-|   |   |-- auth.controller.ts
-|   |   |-- auth.service.ts
-|   |   |-- jwt.strategy.ts
-|   |-- tickets/             # CRM Ticket lifecycle engine
-|   |   |-- dto/             # CreateTicketDto, UpdateStatusDto, AssignTicketDto
-|   |   |-- schemas/         # Mongoose Ticket & AuditLog document schemas
-|   |   |-- ticket.controller.ts
-|   |   |-- ticket.service.ts
-|   |   |-- ticket.repository.ts
-|   |-- sms/                 # Enterprise SMS gateway & queue dispatch
-|   |   |-- dto/             # DispatchSmsDto, WebhookDlrDto
-|   |   |-- entities/        # Prisma/TypeORM PostgreSQL entity mappings
-|   |   |-- sms.controller.ts
-|   |   |-- sms.service.ts
-|   |   |-- sms.producer.ts  # BullMQ job enqueuer
-|   |   |-- sms.worker.ts    # Background queue consumer
+|-- common/                  # Cross-cutting guards, interceptors, decorators, & filters
+|-- config/                  # Environment variable schemas & database connection configs
+|-- modules/                 # Domain-driven feature modules
+|   |-- auth/                # JWT strategy, password hashing, & RBAC guards
+|   |-- tickets/             # Ticket controller, SLA service, & MongoDB schemas
+|   |-- sms/                 # SMS dispatch controller, BullMQ producer & worker
 |   |-- cache/               # Redis in-memory cache-aside manager
-|       |-- cache.service.ts
 |-- main.ts                  # Application bootstrap, Swagger setup, & global pipes
 ```,
   caption: [Modular Backend Project Directory Layout.]
@@ -54,43 +33,23 @@ When an incoming HTTP request reaches a protected route, the `JwtAuthGuard` inte
 
 #figure(
 ```typescript
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { ConfigService } from '@nestjs/config';
-
-export interface JwtPayload {
-  sub: string;        // User UUID
-  email: string;      // User Email Address
-  role: string;       // Role identifier (e.g., 'TEAM_LEAD')
-  permissions: string[];
-}
-
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly configService: ConfigService) {
+  constructor(private readonly config: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET_KEY'),
+      secretOrKey: config.get<string>('JWT_SECRET_KEY'),
     });
   }
 
   async validate(payload: JwtPayload) {
-    if (!payload || !payload.sub) {
-      throw new UnauthorizedException('Malformed or expired authentication token');
-    }
-    // Inject validated user context into Express Request object (req.user)
-    return {
-      userId: payload.sub,
-      email: payload.email,
-      role: payload.role,
-      permissions: payload.permissions,
-    };
+    if (!payload?.sub) throw new UnauthorizedException('Malformed or expired token');
+    return { userId: payload.sub, email: payload.email, role: payload.role };
   }
 }
 ```,
-  caption: [Implementation of the Stateless JWT Verification Strategy.]
+  caption: [Stateless JWT Verification Strategy.]
 ) <lst:jwt_strategy>
 
 
@@ -100,41 +59,25 @@ Endpoint access permissions are declared using custom TypeScript metadata decora
 
 #figure(
 ```typescript
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
     const requiredRoles = this.reflector.getAllAndOverride<string[]>('roles', [
-      context.getHandler(),
-      context.getClass(),
+      context.getHandler(), context.getClass(),
     ]);
-
-    // If no specific roles are mandated, allow authenticated access
-    if (!requiredRoles || requiredRoles.length === 0) {
-      return true;
-    }
+    if (!requiredRoles?.length) return true;
 
     const { user } = context.switchToHttp().getRequest();
-    if (!user || !user.role) {
-      throw new ForbiddenException('Access denied: Unauthenticated user context');
+    if (!user || !requiredRoles.includes(user.role)) {
+      throw new ForbiddenException(`Role '${user?.role}' unauthorized for resource`);
     }
-
-    const hasPermission = requiredRoles.includes(user.role);
-    if (!hasPermission) {
-      throw new ForbiddenException(
-        `Insufficient privileges: Role '${user.role}' is unauthorized for this endpoint`
-      );
-    }
-
     return true;
   }
 }
 ```,
-  caption: [Declarative Role-Based Access Control (RBAC) Guard.]
+  caption: [Role-Based Access Control (RBAC) Guard.]
 ) <lst:roles_guard>
 
 
@@ -149,36 +92,21 @@ The controller defines RESTful endpoints, enforces authorization guards, and val
 
 #figure(
 ```typescript
-import { Controller, Post, Body, Patch, Param, UseGuards, Req, HttpStatus, HttpCode } from '@nestjs/common';
-import { TicketService } from './ticket.service';
-import { CreateTicketDto, AssignTicketDto } from './dto/ticket.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../common/guards/roles.guard';
-import { Roles } from '../common/decorators/roles.decorator';
-
 @Controller('api/v1/tickets')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
   @Roles('SUPER_ADMIN', 'TEAM_LEAD', 'SUPPORT_AGENT')
-  async createTicket(@Body() createTicketDto: CreateTicketDto, @Req() req: any) {
-    const creatorId = req.user.userId;
-    return await this.ticketService.create(createTicketDto, creatorId);
+  create(@Body() dto: CreateTicketDto, @Req() req: RequestWithUser) {
+    return this.ticketService.create(dto, req.user.userId);
   }
 
   @Patch(':id/assign')
-  @HttpCode(HttpStatus.OK)
   @Roles('SUPER_ADMIN', 'TEAM_LEAD')
-  async assignTicket(
-    @Param('id') ticketId: string,
-    @Body() assignTicketDto: AssignTicketDto,
-    @Req() req: any
-  ) {
-    const supervisorId = req.user.userId;
-    return await this.ticketService.assign(ticketId, assignTicketDto.agentId, supervisorId);
+  assign(@Param('id') id: string, @Body('agentId') agentId: string, @Req() req: RequestWithUser) {
+    return this.ticketService.assign(id, agentId, req.user.userId);
   }
 }
 ```,
@@ -186,91 +114,45 @@ export class TicketController {
 ) <lst:ticket_controller>
 
 
-=== Ticket Service Business Logic and SLA Computation
+=== Ticket Service Business Logic and Optimistic Concurrency Control
 
-The service layer implements business rules, including automated SLA calculation and optimistic concurrency control. @lst:ticket_service illustrates the core service logic.
+The service layer implements business rules, automated SLA calculation, and optimistic concurrency control. @lst:ticket_service illustrates the core atomic assignment logic using version incrementing.
 
 #figure(
 ```typescript
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Ticket, TicketDocument } from './schemas/ticket.schema';
-import { CreateTicketDto } from './dto/ticket.dto';
-import { CacheService } from '../cache/cache.service';
-
 @Injectable()
 export class TicketService {
-  constructor(
-    @InjectModel(Ticket.name) private ticketModel: Model<TicketDocument>,
-    private readonly cacheService: CacheService,
-  ) {}
-
-  async create(dto: CreateTicketDto, creatorId: string): Promise<Ticket> {
-    const slaHours = this.calculateSlaWindow(dto.priority);
-    const slaBreachTime = new Date(Date.now() + slaHours * 3600 * 1000);
-
-    const ticketNumber = `TCK-${Date.now().toString().slice(-6)}-${Math.floor(100 + Math.random() * 900)}`;
-
-    const newTicket = new this.ticketModel({
-      ...dto,
-      ticketNumber,
-      status: 'OPEN',
-      createdBy: creatorId,
-      slaBreachAt: slaBreachTime,
-      version: 1,
-    });
-
-    const savedTicket = await newTicket.save();
-    
-    // Invalidate cached ticket summaries
-    await this.cacheService.invalidatePattern('tickets:summary:*');
-    return savedTicket;
-  }
+  constructor(@InjectModel(Ticket.name) private ticketModel: Model<TicketDocument>) {}
 
   async assign(ticketId: string, agentId: string, supervisorId: string): Promise<Ticket> {
     const existing = await this.ticketModel.findById(ticketId);
-    if (!existing) {
-      throw new NotFoundException(`Ticket with ID ${ticketId} not found`);
-    }
+    if (!existing) throw new NotFoundException('Ticket not found');
 
-    // Optimistic Concurrency Control using version field
+    // Optimistic Concurrency Control: match ID and current version
     const updated = await this.ticketModel.findOneAndUpdate(
       { _id: ticketId, version: existing.version },
       {
         $set: { assignedAgentId: agentId, status: 'IN_PROGRESS', updatedAt: new Date() },
         $inc: { version: 1 },
-        $push: {
-          auditLogs: {
-            action: 'ASSIGNMENT',
-            performedBy: supervisorId,
-            assignedTo: agentId,
-            timestamp: new Date(),
-          },
-        },
+        $push: { auditLogs: { action: 'ASSIGN', by: supervisorId, at: new Date() } },
       },
       { new: true }
     );
-
-    if (!updated) {
-      throw new ConflictException('Concurrent update conflict: Ticket was modified by another user');
-    }
-
+    if (!updated) throw new ConflictException('Concurrent update conflict on ticket');
     return updated;
-  }
-
-  private calculateSlaWindow(priority: string): number {
-    switch (priority) {
-      case 'CRITICAL': return 2;  // 2 hours SLA
-      case 'HIGH':     return 6;  // 6 hours SLA
-      case 'MEDIUM':   return 24; // 24 hours SLA
-      default:         return 72; // 72 hours SLA for LOW
-    }
   }
 }
 ```,
-  caption: [Ticket Service with SLA Calculation and Optimistic Locking.]
+  caption: [Ticket Service with Optimistic Concurrency Control.]
 ) <lst:ticket_service>
+
+
+The sequence of interactions during ticket assignment and conflict detection under Optimistic Concurrency Control (OCC) is illustrated in @fig:optimistic_locking_sequence. When multiple supervisors attempt to modify the same ticket concurrently, only the first transaction matching the expected document version succeeds, while conflicting updates are rejected with an HTTP 409 Conflict.
+
+#figure(
+  image("figures/optimistic_locking_sequence.png", width: 95%),
+  caption: [Optimistic Concurrency Control Sequence in Ticket Assignment.]
+) <fig:optimistic_locking_sequence>
 
 
 == Implementation of the Enterprise SMS Gateway Microservice <sec:impl_sms>
@@ -284,134 +166,58 @@ To adhere strictly to Bangladesh Telecommunication Regulatory Commission (BTRC) 
 
 #figure(
 ```typescript
-import { Injectable } from '@nestjs/common';
-import Redis from 'ioredis';
-
-@Injectable()
-export class TokenBucketLimiter {
-  constructor(private readonly redis: Redis) {}
-
-  async acquireToken(key: string, capacity: number, fillRatePerSec: number): Promise<boolean> {
-    const now = Date.now();
-    // Atomic Lua script ensures thread-safe token evaluation in Redis
-    const luaScript = `
-      local key = KEYS[1]
-      local capacity = tonumber(ARGV[1])
-      local fill_rate = tonumber(ARGV[2])
-      local now = tonumber(ARGV[3])
-      
-      local data = redis.call('HMGET', key, 'tokens', 'last_updated')
-      local tokens = tonumber(data[1])
-      local last_updated = tonumber(data[2])
-      
-      if not tokens then
-        tokens = capacity
-        last_updated = now
-      else
-        local delta = math.max(0, (now - last_updated) / 1000)
-        tokens = math.min(capacity, tokens + delta * fill_rate)
-        last_updated = now
-      end
-      
-      if tokens >= 1 then
-        tokens = tokens - 1
-        redis.call('HMSET', key, 'tokens', tokens, 'last_updated', last_updated)
-        redis.call('EXPIRE', key, 60)
-        return 1
-      else
-        redis.call('HMSET', key, 'tokens', tokens, 'last_updated', last_updated)
-        return 0
-      end
-    `;
-
-    const result = await this.redis.eval(luaScript, 1, `limiter:${key}`, capacity, fillRatePerSec, now);
-    return result === 1;
-  }
+async acquireToken(key: string, capacity: number, fillRatePerSec: number): Promise<boolean> {
+  const luaScript = `
+    local key, cap, rate, now = KEYS[1], tonumber(ARGV[1]), tonumber(ARGV[2]), tonumber(ARGV[3])
+    local data = redis.call('HMGET', key, 'tokens', 'last_updated')
+    local tokens = tonumber(data[1]) or cap
+    local last = tonumber(data[2]) or now
+    tokens = math.min(cap, tokens + math.max(0, (now - last) / 1000) * rate)
+    if tokens >= 1 then
+      redis.call('HMSET', key, 'tokens', tokens - 1, 'last_updated', now)
+      redis.call('EXPIRE', key, 60); return 1
+    end
+    redis.call('HMSET', key, 'tokens', tokens, 'last_updated', now); return 0
+  `;
+  const res = await this.redis.eval(luaScript, 1, `limiter:${key}`, capacity, fillRatePerSec, Date.now());
+  return res === 1;
 }
 ```,
-  caption: [Token Bucket Rate Limiter Implementation in TypeScript.]
+  caption: [Redis Lua Token Bucket Rate Limiter.]
 ) <lst:token_bucket>
 
 
-=== BullMQ Queue Producer and Consumer Worker
+=== BullMQ Asynchronous Queue Processing and Worker Lifecycle
 
-Outbound message requests are rapidly enqueued by the Producer service, as shown in @lst:sms_queue.
+Outbound message requests are rapidly enqueued by the Producer service, freeing the HTTP request thread. The end-to-end lifecycle of asynchronous SMS jobs within BullMQ, including active concurrency pools, exponential backoff retries, and dead letter queue routing, is illustrated in @fig:bullmq_job_lifecycle.
+
+#figure(
+  image("figures/bullmq_job_lifecycle.png", width: 95%),
+  caption: [BullMQ Asynchronous Job Lifecycle and Dead Letter Queue (DLQ).]
+) <fig:bullmq_job_lifecycle>
+
+
+@lst:sms_queue presents the BullMQ worker configuration, carrier HTTP dispatch, and provider rate quota enforcement.
 
 #figure(
 ```typescript
-import { Injectable, Logger } from '@nestjs/common';
-import { Queue, Worker, Job } from 'bullmq';
-import { ConfigService } from '@nestjs/config';
-import axios from 'axios';
-
-@Injectable()
-export class SmsQueueProducer {
-  private queue: Queue;
-
-  constructor(private configService: ConfigService) {
-    this.queue = new Queue('sms-dispatch-queue', {
-      connection: {
-        host: configService.get<string>('REDIS_HOST'),
-        port: configService.get<number>('REDIS_PORT'),
-      },
-    });
-  }
-
-  async enqueueSms(recipient: string, message: string, trackingId: string) {
-    await this.queue.add(
-      'send-sms',
-      { recipient, message, trackingId },
-      {
-        attempts: 3,
-        backoff: {
-          type: 'exponential',
-          delay: 2000, // 2s, 4s, 8s backoff
-        },
-        removeOnComplete: true,
-        removeOnFail: false,
-      }
-    );
-  }
-}
-
-// Background Worker Service
 @Injectable()
 export class SmsQueueWorker {
-  private worker: Worker;
-  private readonly logger = new Logger(SmsQueueWorker.name);
-
-  constructor(configService: ConfigService) {
-    this.worker = new Worker(
-      'sms-dispatch-queue',
-      async (job: Job) => {
-        const { recipient, message, trackingId } = job.data;
-        this.logger.log(`Dispatching SMS to ${recipient} (Tracking ID: ${trackingId})`);
-        
-        // Execute HTTP POST to carrier SMPP/HTTP Gateway
-        const response = await axios.post(configService.get('TELCO_GATEWAY_URL'), {
-          msisdn: recipient,
-          text: message,
-          transaction_id: trackingId,
-        }, { timeout: 4000 });
-
-        return response.data;
-      },
-      {
-        concurrency: 20, // 20 parallel worker threads per process
-        connection: {
-          host: configService.get('REDIS_HOST'),
-          port: configService.get('REDIS_PORT'),
-        },
-      }
-    );
-
-    this.worker.on('failed', (job, err) => {
-      this.logger.error(`Job ${job?.id} failed with error: ${err.message}`);
+  constructor(private readonly config: ConfigService) {
+    new Worker('sms-dispatch-queue', async (job: Job) => {
+      const { recipient, message, trackingId } = job.data;
+      return await axios.post(this.config.get('TELCO_GATEWAY_URL'), {
+        msisdn: recipient, text: message, transaction_id: trackingId,
+      }, { timeout: 4000 });
+    }, {
+      concurrency: 20, // 20 parallel worker threads per process
+      connection: { host: config.get('REDIS_HOST'), port: config.get('REDIS_PORT') },
+      limiter: { max: 100, duration: 1000 }, // Enforce 100 msg/sec carrier quota
     });
   }
 }
 ```,
-  caption: [SMS Queue Producer and Asynchronous Worker Implementation.]
+  caption: [BullMQ Asynchronous SMS Queue Worker.]
 ) <lst:sms_queue>
 
 
@@ -421,41 +227,21 @@ When telecommunication operators send asynchronous Delivery Receipts (DLR), an H
 
 #figure(
 ```typescript
-import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
-import * as crypto from 'crypto';
-
 @Injectable()
 export class WebhookSignatureMiddleware implements NestMiddleware {
-  private readonly secret = process.env.TELCO_WEBHOOK_SECRET || 'secret-key';
-
   use(req: Request, res: Response, next: NextFunction) {
     const signature = req.headers['x-telco-signature'] as string;
-    if (!signature) {
-      throw new UnauthorizedException('Missing carrier cryptographic signature header');
-    }
+    if (!signature) throw new UnauthorizedException('Missing carrier signature header');
 
-    const payload = JSON.stringify(req.body);
-    const expectedSignature = crypto
-      .createHmac('sha256', this.secret)
-      .update(payload)
-      .digest('hex');
-
-    // Use timingSafeEqual to guard against timing attacks
-    const isValid = crypto.timingSafeEqual(
-      Buffer.from(signature, 'utf8'),
-      Buffer.from(expectedSignature, 'utf8')
-    );
-
-    if (!isValid) {
-      throw new UnauthorizedException('Invalid cryptographic signature: Tampered payload');
-    }
-
+    const expected = crypto.createHmac('sha256', process.env.TELCO_WEBHOOK_SECRET)
+                           .update(JSON.stringify(req.body)).digest('hex');
+    const isValid = crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+    if (!isValid) throw new UnauthorizedException('Invalid cryptographic signature');
     next();
   }
 }
 ```,
-  caption: [HMAC-SHA256 Webhook Cryptographic Verification Middleware.]
+  caption: [HMAC-SHA256 Webhook Verification Middleware.]
 ) <lst:webhook_verifier>
 
 
@@ -466,51 +252,24 @@ To satisfy NFR-02 (sub-50ms latency), a generalized Cache-Aside service was impl
 
 #figure(
 ```typescript
-import { Injectable, Logger } from '@nestjs/common';
-import Redis from 'ioredis';
-
 @Injectable()
 export class CacheService {
-  private readonly redis: Redis;
-  private readonly logger = new Logger(CacheService.name);
-
-  constructor() {
-    this.redis = new Redis({
-      host: process.env.REDIS_HOST || '127.0.0.1',
-      port: Number(process.env.REDIS_PORT) || 6379,
-    });
-  }
+  constructor(private readonly redis: Redis) {}
 
   async getOrSet<T>(key: string, ttlSeconds: number, fetcher: () => Promise<T>): Promise<T> {
-    try {
-      const cached = await this.redis.get(key);
-      if (cached) {
-        return JSON.parse(cached) as T;
-      }
-    } catch (err) {
-      this.logger.warn(`Redis read error on key ${key}: ${err.message}`);
-    }
+    const cached = await this.redis.get(key).catch(() => null);
+    if (cached) return JSON.parse(cached) as T;
 
-    // Cache Miss: Execute primary database fetcher function
     const freshData = await fetcher();
-
-    try {
-      if (freshData !== null && freshData !== undefined) {
-        await this.redis.set(key, JSON.stringify(freshData), 'EX', ttlSeconds);
-      }
-    } catch (err) {
-      this.logger.warn(`Redis write error on key ${key}: ${err.message}`);
+    if (freshData !== null && freshData !== undefined) {
+      await this.redis.set(key, JSON.stringify(freshData), 'EX', ttlSeconds).catch(() => null);
     }
-
     return freshData;
   }
 
   async invalidatePattern(pattern: string): Promise<void> {
     const keys = await this.redis.keys(pattern);
-    if (keys.length > 0) {
-      await this.redis.del(...keys);
-      this.logger.log(`Invalidated ${keys.length} keys matching pattern: ${pattern}`);
-    }
+    if (keys.length > 0) await this.redis.del(...keys);
   }
 }
 ```,
@@ -525,41 +284,21 @@ In enterprise environments, unhandled exceptions can leak internal stack traces 
 
 #figure(
 ```typescript
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common';
-import { Request, Response } from 'express';
-
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
-  private readonly logger = new Logger(GlobalExceptionFilter.name);
-
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    const res = ctx.getResponse<Response>();
+    const req = ctx.getRequest<Request>();
 
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
-
-    const message =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : 'Internal server error encountered';
-
-    const errorPayload = {
+    const status = exception instanceof HttpException ? exception.getStatus() : 500;
+    const errorResponse = {
       statusCode: status,
       timestamp: new Date().toISOString(),
-      path: request.url,
-      method: request.method,
-      error: typeof message === 'object' ? message : { message },
+      path: req.url,
+      error: exception instanceof HttpException ? exception.getResponse() : 'Internal Server Error',
     };
-
-    this.logger.error(
-      `HTTP ${status} [${request.method} ${request.url}]: ${JSON.stringify(errorPayload)}`
-    );
-
-    response.status(status).json(errorPayload);
+    res.status(status).json(errorResponse);
   }
 }
 ```,

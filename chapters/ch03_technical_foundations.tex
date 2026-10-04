@@ -25,17 +25,28 @@ The internal architecture of Node.js consists of three primary layers:
 \end{enumerate}
 
 \subsection{The Node.js Event Loop Mechanics}
-The Node.js Event Loop operates as a continuous state machine that processes callbacks across distinct sequential phases. Each iteration of the event loop is termed a \textit{tick}. Figure~\ref{fig:node_event_loop_flow} illustrates the cyclical progression of these phases:
+The Node.js Event Loop operates as a continuous state machine that processes callbacks across distinct sequential phases. Each iteration of the event loop is termed a \textit{tick}. Figure~\ref{fig:node_event_loop_flow} illustrates the cyclical progression of these phases, showing how microtask queues (such as \texttt{process.nextTick()} and Promise resolution handlers) are drained immediately at each phase transition.
 
 \begin{figure}[htbp]
     \centering
-    \setlength{\fboxsep}{12pt}
+    \includegraphics[width=0.88\textwidth]{figures/node_event_loop_flow.png}
+    \caption{Cyclical Execution Model of the Node.js Libuv Event Loop.}
+    \label{fig:node_event_loop_flow}
+\end{figure}
+
+The specific functional responsibilities of each operational phase in the Libuv loop are delineated in Table~\ref{tab:event_loop_phases}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Functional Responsibilities of Event Loop Phases.}
+    \label{tab:event_loop_phases}
+    \setlength{\fboxsep}{10pt}
     \setlength{\fboxrule}{0.8pt}
     \fcolorbox{grayborder}{lightgraybg}{%
         \begin{minipage}{\dimexpr\textwidth - 2\fboxsep - 2\fboxrule\relax}
             \centering
-            {\large\bfseries\color{darkblue} The Node.js Libuv Event Loop Phases} \par \vspace{0.35cm}
-            \renewcommand{\arraystretch}{1.35}
+            {\large\bfseries\color{darkblue} Libuv Event Loop Operational Phases} \par \vspace{0.3cm}
+            \renewcommand{\arraystretch}{1.3}
             \begin{tabularx}{\textwidth}{>{\bfseries\color{primaryblue}}l >{\raggedright\arraybackslash}X}
                 \toprule
                 \textbf{\color{darkblue}Phase} & \textbf{\color{darkblue}Operational Function and Responsibilities} \\
@@ -47,15 +58,12 @@ The Node.js Event Loop operates as a continuous state machine that processes cal
                 Check & Executes callbacks invoked via \texttt{setImmediate()}. \\[3pt]
                 Close Callbacks & Handles abrupt connection closures (e.g., \texttt{socket.on('close')}). \\
                 \bottomrule
-            \end{tabularx} \par \vspace{0.25cm}
+            \end{tabularx} \par \vspace{0.2cm}
             \raggedright
-            {\footnotesize \textit{\textbf{Note:} \texttt{process.nextTick()} and Microtask Promise queues execute immediately after each phase transition before the loop progresses.}}
+            {\footnotesize \textit{\textbf{Note:} Microtasks (\texttt{process.nextTick()} and Promise callbacks) execute immediately upon completion of every individual callback before progressing.}}
         \end{minipage}%
     }
-    \vspace{0.25cm}
-    \caption{Phases of the Node.js Libuv Event Loop Execution Model.}
-    \label{fig:node_event_loop_flow}
-\end{figure}
+\end{table}
 
 By offloading I/O operations to the operating system kernel and Libuv worker threads, the primary thread remains perpetually available to accept new incoming HTTP connections, parse routing logic, and dispatch responses.
 
@@ -174,6 +182,15 @@ High-volume enterprise applications face severe performance degradation when eve
     \item \textbf{Distributed Locks:} Implementing Redlock algorithms to prevent concurrent race conditions during critical ticket assignments.
 \end{itemize}
 
+The lifecycle of the Cache-Aside architecture, illustrating the read miss resolution and write-invalidation sequences, is depicted in Figure~\ref{fig:redis_cache_aside_flow}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.92\textwidth]{figures/redis_cache_aside_flow.png}
+    \caption{Redis Cache-Aside Pattern with Read Miss Sequence and Write Invalidation.}
+    \label{fig:redis_cache_aside_flow}
+\end{figure}
+
 \subsection{Asynchronous Queue Processing with BullMQ}
 In enterprise systems, time-consuming operations—such as sending SMS notifications, compiling PDF reports, or dispatching webhooks—must not execute synchronously within the primary HTTP request-response cycle. Blocking the HTTP thread induces client timeouts and limits server concurrency.
 
@@ -192,9 +209,10 @@ Securing enterprise backend endpoints against unauthorized intrusion, data breac
 
 \subsection{JSON Web Tokens (JWT) and Stateless Authentication}
 Authentication is governed by \textbf{JSON Web Tokens (RFC 7519)} \citep{rfc7519jwt}. A JWT comprises three distinct segments separated by periods:
-\begin{equation}
-    \text{JWT} = \underbrace{\text{Base64Url}(\text{Header})}_{\text{Algorithm \& Token Type}} \mathbin{\Vert} \text{.} \mathbin{\Vert} \underbrace{\text{Base64Url}(\text{Payload})}_{\text{Claims: User ID, Role, Expiry}} \mathbin{\Vert} \text{.} \mathbin{\Vert} \underbrace{\text{HMAC-SHA256}(\text{Header} \mathbin{\Vert} \text{Payload}, \text{Secret})}_{\text{Cryptographic Digital Signature}}
-\end{equation}
+\begin{align}
+    \text{JWT} &= \underbrace{\text{Base64Url}(\text{Header})}_{\text{Algorithm \& Token Type}} \mathbin{\Vert} \text{.} \mathbin{\Vert} \underbrace{\text{Base64Url}(\text{Payload})}_{\text{Claims: User ID, Role, Expiry}} \nonumber \\
+    &\quad \mathbin{\Vert} \text{.} \mathbin{\Vert} \underbrace{\text{HMAC-SHA256}(\text{Header} \mathbin{\Vert} \text{Payload}, \text{Secret})}_{\text{Cryptographic Digital Signature}}
+\end{align}
 Because the token signature can be verified mathematically by API gateways without querying the database on every request, JWT enables completely stateless, horizontally scalable authentication. A dual-token architecture is utilized: short-lived Access Tokens (15-minute lifespan) paired with cryptographically secure Refresh Tokens (7-day lifespan stored in HTTP-only, Secure cookies).
 
 \subsection{Role-Based Access Control (RBAC)}

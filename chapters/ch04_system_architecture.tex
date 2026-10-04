@@ -68,6 +68,16 @@ The architecture is partitioned into cleanly decoupled tiers:
     \item \textbf{External Infrastructure Tier:} Comprises underlying bare-metal Linux servers executing containerized Docker workloads, managed PostgreSQL/MongoDB database clusters, and external telecommunication carrier SMPP/HTTP endpoints.
 \end{enumerate}
 
+\subsection{Controller-Service-Repository Tiered Pattern}
+To enforce clean separation of concerns across application layers, each core service strictly adheres to the Controller-Service-Repository (CSR) architectural pattern. As illustrated in Figure~\ref{fig:crm_csr_pattern}, HTTP concerns are isolated within controllers, business rules are encapsulated in injectable services, and persistent I/O operations are abstracted behind dedicated repository layers.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.92\textwidth]{figures/crm_csr_pattern.png}
+    \caption{Controller-Service-Repository (CSR) Tiered Architectural Flow.}
+    \label{fig:crm_csr_pattern}
+\end{figure}
+
 \section{Database Schema and Data Modeling}
 \label{sec:arch_db_schema}
 
@@ -132,7 +142,15 @@ The SMS Gateway microservice was designed to address high-volume message deliver
 
 \subsection{Pipeline Mechanics}
 \begin{enumerate}
-    \item \textbf{Ingestion \& Rate Limiting:} Clients initiate single or bulk SMS dispatch requests via HTTPS. The request passes through an in-memory \textbf{Token Bucket Rate Limiter} implemented via Redis atomic operations, guaranteeing that inbound client traffic does not overwhelm internal capacity.
+    \item \textbf{Ingestion \& Rate Limiting:} Clients initiate single or bulk SMS dispatch requests via HTTPS. The request passes through an in-memory \textbf{Token Bucket Rate Limiter} implemented via Redis atomic operations, guaranteeing that inbound client traffic does not overwhelm internal capacity. Figure~\ref{fig:token_bucket_algorithm} details the continuous token replenishment and consumption evaluation logic enforced on incoming requests.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.92\textwidth]{figures/token_bucket_algorithm.png}
+    \caption{Token Bucket Rate Limiting Algorithm Execution Flow.}
+    \label{fig:token_bucket_algorithm}
+\end{figure}
+
     \item \textbf{Queue Decoupling (Producer):} The API service acts as a producer, persisting initial message metadata into PostgreSQL and enqueuing jobs into the \textbf{BullMQ Redis Queue}. The HTTP connection immediately terminates with an HTTP \texttt{202 Accepted} response and tracking UUID, freeing the client from carrier latency.
     \item \textbf{Parallel Worker Pool (Consumer):} Clustered BullMQ worker processes continuously pull pending jobs from Redis. Workers format the payload to carrier-specific SMPP or HTTP protocols, execute telco routing, and dispatch messages across direct interconnects with Bangladesh operators (Grameenphone, Robi, Banglalink, Teletalk).
     \item \textbf{Retry with Exponential Backoff:} If a telecom carrier endpoint returns a transient network timeout or HTTP 5xx error, BullMQ automatically schedules retries using an exponential backoff formula:

@@ -22,46 +22,31 @@ The internal architecture of Node.js consists of three primary layers:
 
 === The Node.js Event Loop Mechanics
 
-The Node.js Event Loop operates as a continuous state machine that processes callbacks across distinct sequential phases. Each iteration of the event loop is termed a _tick_. @fig:node_event_loop_flow illustrates the cyclical progression of these phases:
+The Node.js Event Loop operates as a continuous state machine that processes callbacks across distinct sequential phases. Each iteration of the event loop is termed a _tick_. @fig:node_event_loop_flow illustrates the cyclical progression of these phases, showing how microtask queues (such as `process.nextTick()` and Promise resolution handlers) are drained immediately at each phase transition.
 
 #figure(
-  block(
-    fill: rgb("#F5F7FA"),
-    stroke: 0.8pt + rgb("#DCE0E6"),
-    radius: 4pt,
-    inset: 12pt,
-    width: 100%,
-    [
-      #align(center)[
-        #text(size: 13pt, weight: "bold", fill: rgb("#0C2C56"))[The Node.js Libuv Event Loop Phases]
-      ]
-      #v(6pt)
-      #table(
-        columns: (auto, 1fr),
-        align: (left, left),
-        stroke: (x, y) => if y == 0 { (top: 1.2pt + rgb("#0C2C56"), bottom: 0.8pt + rgb("#0C2C56")) } else if y == 6 { (bottom: 0.8pt + rgb("#0C2C56")) } else { none },
-        fill: (x, y) => if y == 0 { rgb("#E8EEF5") } else { none },
-        inset: (x: 8pt, y: 6.5pt),
-        table.header(
-          [*Phase*], [*Operational Function and Responsibilities*]
-        ),
-        [*Timers*], [Executes callbacks scheduled by `setTimeout()` and `setInterval()`.],
-        [*Pending I/O*], [Executes I/O callbacks deferred from the previous loop iteration.],
-        [*Idle, Prepare*], [Internal runtime routines utilized exclusively by the Libuv subsystem.],
-        [*Poll*], [Retrieves new I/O events, executes I/O-related callbacks, and blocks if empty.],
-        [*Check*], [Executes callbacks invoked via `setImmediate()`.],
-        [*Close Callbacks*], [Handles abrupt connection closures (e.g., `socket.on('close')`).]
-      )
-      #v(6pt)
-      #align(left)[
-        #text(size: 9pt, style: "italic", fill: rgb("#555555"))[*Note:* `process.nextTick()` and Microtask Promise queues execute immediately after each phase transition before the loop progresses.]
-      ]
-    ]
-  ),
-  caption: [Phases of the Node.js Libuv Event Loop Execution Model.],
-  kind: image,
-  supplement: [Figure],
+  image("figures/node_event_loop_flow.png", width: 95%),
+  caption: [Cyclical Execution Model of the Node.js Libuv Event Loop.]
 ) <fig:node_event_loop_flow>
+
+
+The specific functional responsibilities of each operational phase in the Libuv loop are delineated in @tab:event_loop_phases.
+
+#figure(
+  table(
+    columns: (auto, 1fr),
+    align: (left, left),
+    stroke: 0.5pt + luma(180),
+    table.header([*Phase*], [*Operational Function and Responsibilities*]),
+    [*Timers*], [Executes callbacks scheduled by `setTimeout()` and `setInterval()`.],
+    [*Pending I/O*], [Executes I/O callbacks deferred from the previous loop iteration.],
+    [*Idle, Prepare*], [Internal runtime routines utilized exclusively by the Libuv subsystem.],
+    [*Poll*], [Retrieves new I/O events, executes I/O-related callbacks, and blocks if empty.],
+    [*Check*], [Executes callbacks invoked via `setImmediate()`.],
+    [*Close Callbacks*], [Handles abrupt connection closures (e.g., `socket.on('close')`).]
+  ),
+  caption: [Functional Responsibilities of Event Loop Phases.]
+) <tab:event_loop_phases>
 
 
 By offloading I/O operations to the operating system kernel and Libuv worker threads, the primary thread remains perpetually available to accept new incoming HTTP connections, parse routing logic, and dispatch responses.
@@ -170,6 +155,14 @@ High-volume enterprise applications face severe performance degradation when eve
 - *Cache-Aside Strategy:* Frequently queried, slowly mutating data (such as active agent rosters, CRM skill tags, and SLA configuration policies) are cached in Redis. Inbound queries check the Redis cache first; only on a _cache miss_ is the persistent database queried, followed by cache population with a defined Time-To-Live (TTL).
 - *Session & Token Blacklisting:* Invalidated JWT refresh tokens and active user session states are maintained in Redis for instantaneous authorization checks.
 - *Distributed Locks:* Implementing Redlock algorithms to prevent concurrent race conditions during critical ticket assignments.
+
+The lifecycle of the Cache-Aside architecture, illustrating the read miss resolution and write-invalidation sequences, is depicted in @fig:redis_cache_aside_flow.
+
+#figure(
+  image("figures/redis_cache_aside_flow.png", width: 95%),
+  caption: [Redis Cache-Aside Pattern with Read Miss Sequence and Write Invalidation.]
+) <fig:redis_cache_aside_flow>
+
 
 === Asynchronous Queue Processing with BullMQ
 

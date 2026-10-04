@@ -45,14 +45,16 @@ Encountering unexpected runtime anomalies and debugging complex distributed syst
 *Symptom:* In high-volume contact center shifts, two team supervisors would occasionally assign the same incoming ticket to two different support agents simultaneously, causing dual notifications and conflicting audit log entries.
 
 *Root-Cause Analysis:* The ticket assignment routine initially followed a naive _Read-Modify-Write_ sequence:
-$ "Supervisor A Reads Ticket" --> "Supervisor B Reads Ticket" --> "A Writes Assignee" --> "B Overwrites Assignee" $
+$ "Supervisor A Reads" &--> "Supervisor B Reads" \
+  &--> "A Writes Assignee" --> "B Overwrites Assignee" $
 
 Because both transactions read the ticket state before either write completed, the second update silently overwrote the first without detection.
 
 *Engineering Resolution:*
 - Implemented *Optimistic Concurrency Control (OCC)* in MongoDB using an atomic document `version` field.
 - Modified the update query to atomically match both the ticket ID and its current version:
-$ "Query: " {"id": "ticketId", "version": v} ==> "Update: " {"$set": {"agentId": "newAgent"}, "$inc": {"version": 1}} $
+$ "Match: " &{"id": "ticketId", "version": v} \
+  ==> "Update: " &{"$set": {"agentId": "newAgent"}, "$inc": {"version": 1}} $
 
 - If another user mutates the ticket first, the version increments to $v+1$. The second transaction's update matches zero documents and immediately throws an HTTP `409 ConflictException`, prompting the user to refresh their view.
 

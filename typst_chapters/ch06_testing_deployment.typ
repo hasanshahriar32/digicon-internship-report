@@ -4,7 +4,13 @@
 == Testing Strategy and the Software Test Pyramid <sec:test_strategy>
 
 
-Quality Assurance at Digicon is guided by Martin Fowler's *Software Test Pyramid* @fowler2018refactoring, which emphasizes a strong foundation of fast, automated unit tests, supported by intermediate integration test suites, and crowned by high-level end-to-end (E2E) acceptance tests. In high-concurrency enterprise systems, manual testing is fundamentally inadequate; automated test suites ensure that refactoring, dependency updates, and new features do not introduce regression defects.
+Quality Assurance at Digicon is guided by Martin Fowler's *Software Test Pyramid* @fowler2018refactoring, which emphasizes a strong foundation of fast, automated unit tests, supported by intermediate integration test suites, and crowned by high-level end-to-end (E2E) acceptance tests. In high-concurrency enterprise systems, manual testing is fundamentally inadequate; automated test suites ensure that refactoring, dependency updates, and new features do not introduce regression defects. @fig:software_test_pyramid illustrates the proportional distribution of testing effort, speed, and execution cost adopted across Digicon backend systems.
+
+#figure(
+  image("figures/software_test_pyramid.png", width: 95%),
+  caption: [Digicon Software Testing Pyramid: Distribution of Testing Layers.]
+) <fig:software_test_pyramid>
+
 
 The author was tasked with implementing automated test suites across all newly developed CRM and SMS gateway modules, achieving an aggregate code coverage exceeding 85%.
 
@@ -17,65 +23,26 @@ The author was tasked with implementing automated test suites across all newly d
 
 #figure(
 ```typescript
-import { Test, TestingModule } from '@nestjs/testing';
-import { getModelToken } from '@nestjs/mongoose';
-import { TicketService } from './ticket.service';
-import { CacheService } from '../cache/cache.service';
-import { ConflictException } from '@nestjs/common';
-
 describe('TicketService Unit Tests', () => {
-  let service: TicketService;
-  let mockTicketModel: any;
-  let mockCacheService: any;
-
-  beforeEach(async () => {
-    // Construct mock database functions
-    mockTicketModel = {
-      findById: jest.fn(),
-      findOneAndUpdate: jest.fn(),
-    };
-
-    mockCacheService = {
-      invalidatePattern: jest.fn().mockResolvedValue(undefined),
-    };
-
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        TicketService,
-        { provide: getModelToken('Ticket'), useValue: mockTicketModel },
-        { provide: CacheService, useValue: mockCacheService },
-      ],
-    }).compile();
-
-    service = module.get<TicketService>(TicketService);
-  });
-
-  it('should successfully assign ticket and increment version counter', async () => {
-    const existingTicket = { _id: 'tck-123', version: 1 };
-    const updatedTicket = { _id: 'tck-123', assignedAgentId: 'agent-456', status: 'IN_PROGRESS', version: 2 };
-
-    mockTicketModel.findById.mockResolvedValue(existingTicket);
-    mockTicketModel.findOneAndUpdate.mockResolvedValue(updatedTicket);
+  it('should assign ticket and increment version counter', async () => {
+    mockTicketModel.findById.mockResolvedValue({ _id: 'tck-123', version: 1 });
+    mockTicketModel.findOneAndUpdate.mockResolvedValue({ assignedAgentId: 'agent-456', version: 2 });
 
     const result = await service.assign('tck-123', 'agent-456', 'sup-789');
-
     expect(result.assignedAgentId).toEqual('agent-456');
     expect(result.version).toEqual(2);
-    expect(mockTicketModel.findOneAndUpdate).toHaveBeenCalled();
   });
 
-  it('should throw ConflictException when concurrent version mismatch occurs', async () => {
+  it('should throw ConflictException on concurrent version mismatch', async () => {
     mockTicketModel.findById.mockResolvedValue({ _id: 'tck-123', version: 1 });
-    // Simulate optimistic lock failure returning null
-    mockTicketModel.findOneAndUpdate.mockResolvedValue(null);
+    mockTicketModel.findOneAndUpdate.mockResolvedValue(null); // Simulate OCC conflict
 
-    await expect(service.assign('tck-123', 'agent-456', 'sup-789')).rejects.toThrow(
-      ConflictException
-    );
+    await expect(service.assign('tck-123', 'agent-456', 'sup-789'))
+      .rejects.toThrow(ConflictException);
   });
 });
 ```,
-  caption: [Unit Test Suite for Ticket Service Using Jest.]
+  caption: [Unit Test for Ticket Assignment and Optimistic Lock Mismatch.]
 ) <lst:ticket_unit_test>
 
 
@@ -88,62 +55,28 @@ While unit tests validate isolated business logic, *Integration Tests* verify th
 
 #figure(
 ```typescript
-import * as request from 'supertest';
-import { Test } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { AppModule } from '../src/app.module';
-
 describe('Ticket API Endpoints (e2e)', () => {
-  let app: INestApplication;
-  let validAgentToken: string;
-
-  beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleRef.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe());
-    await app.init();
-
-    // Authenticate and acquire valid JWT token
-    const loginRes = await request(app.getHttpServer())
-      .post('/api/v1/auth/login')
-      .send({ email: 'agent@digicon.com.bd', password: 'ValidPassword123!' });
-    validAgentToken = loginRes.body.accessToken;
-  });
-
-  it('POST /api/v1/tickets - should reject unauthenticated requests with 401', () => {
+  it('POST /api/v1/tickets - rejects unauthenticated requests with 401', () => {
     return request(app.getHttpServer())
       .post('/api/v1/tickets')
-      .send({ title: 'Telecom Network Failure', priority: 'HIGH' })
+      .send({ title: 'Telecom Outage', priority: 'HIGH' })
       .expect(401);
   });
 
-  it('POST /api/v1/tickets - should create ticket and return 201 Created', () => {
+  it('POST /api/v1/tickets - creates ticket and returns 201 Created', () => {
     return request(app.getHttpServer())
       .post('/api/v1/tickets')
-      .set('Authorization', `Bearer ${validAgentToken}`)
-      .send({
-        customerId: '123e4567-e89b-12d3-a456-426614174000',
-        title: 'Billing Dispute Resolution',
-        description: 'Customer charged twice for SMS bundle subscription.',
-        priority: 'CRITICAL',
-      })
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({ customerId: 'c-101', title: 'Billing Dispute', priority: 'CRITICAL' })
       .expect(201)
       .expect((res) => {
         expect(res.body).toHaveProperty('ticketNumber');
         expect(res.body.status).toEqual('OPEN');
-        expect(res.body.slaBreachAt).toBeDefined();
       });
-  });
-
-  afterAll(async () => {
-    await app.close();
   });
 });
 ```,
-  caption: [API Integration Test Suite Using Supertest.]
+  caption: [API Integration Test Using Supertest.]
 ) <lst:api_integration_test>
 
 
@@ -208,34 +141,17 @@ A naive, single-stage Dockerfile copies the entire source repository and install
 # Stage 1: Build & Compilation Stage
 FROM node:20-alpine AS builder
 WORKDIR /usr/src/app
-
-# Install dependencies based on lockfile for deterministic builds
 COPY package*.json ./
 RUN npm ci
-
-# Copy source code and compile TypeScript to JavaScript
 COPY . .
-RUN npm run build
-
-# Prune development dependencies to keep production footprint minimal
-RUN npm prune --production
+RUN npm run build && npm prune --production
 
 # Stage 2: Minimalist Production Runtime
 FROM node:20-alpine AS runner
 WORKDIR /usr/src/app
-
-ENV NODE_ENV=production
-ENV PORT=3000
-
-# Security Hardening: Execute under non-root unprivileged user
 USER node
-
-# Copy only production dependencies and compiled artifacts from Stage 1
 COPY --chown=node:node --from=builder /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=builder /usr/src/app/dist ./dist
-COPY --chown=node:node package*.json ./
-
-EXPOSE 3000
 CMD ["node", "dist/main.js"]
 ```,
   caption: [Production Multi-Stage Dockerfile for NestJS Backend.]
@@ -243,6 +159,14 @@ CMD ["node", "dist/main.js"]
 
 
 === Container Optimization Impact
+
+@fig:docker_multistage_build visually contrasts the architecture of a naive single-stage build against Digicon's multi-stage build pipeline, highlighting the isolation of build compilers and the dramatic reduction in attack surface and binary size.
+
+#figure(
+  image("figures/docker_multistage_build.png", width: 95%),
+  caption: [Multi-Stage Docker Build Architecture and Image Size Optimization.]
+) <fig:docker_multistage_build>
+
 
 The multi-stage build strategy yielded decisive operational advantages:
 - *Image Footprint Reduction:* The final container image size dropped from *840 MB* (naive single-stage image containing TypeScript compilers and development packages) to a lightweight *142 MB* (an *83% reduction*).
