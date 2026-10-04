@@ -108,140 +108,14 @@
 #counter(page).update(1)
 
 // ─────────────────────────────────────────────────────────────
-// 2. LETTER OF TRANSMITTAL
+// 2. INDUSTRIAL INTERNSHIP CERTIFICATE
 // ─────────────────────────────────────────────────────────────
-#heading(level: 1, numbering: none)[Letter of Transmittal]
-#v(0.5cm)
-
-*Date:* October 04, 2026 \
-*To:* \
-The Chairman \
-Department of Electronics and Communication Engineering \
-Hajee Mohammad Danesh Science and Technology University (HSTU) \
-Dinajpur-5200, Bangladesh.
-
-#v(0.3cm)
-*Subject: Submission of Internship Report on Backend Web Development at Digicon Technologies PLC.*
-
-#v(0.3cm)
-Dear Sir,
-
-It is an immense privilege to submit my industrial attachment report titled *"Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC"*, completed as an indispensable requirement for the degree of Bachelor of Science in Electronics and Communication Engineering (Course Code: ECE 450).
-
-This internship provided me with invaluable practical exposure to enterprise-level software engineering paradigms in an industry-leading IT and BPO enterprise. Throughout the tenure of my internship at Digicon Technologies PLC, I was actively embedded within the Backend Engineering division. I was entrusted with architecting, developing, and optimizing mission-critical backend services utilizing the JavaScript and TypeScript runtime ecosystems, specifically leveraging Node.js, Express.js, and NestJS alongside PostgreSQL, MongoDB, and Redis.
-
-The enclosed report details the host organization's corporate structure, technological ecosystem, software engineering lifecycle, system architecture, backend service implementation, quality assurance pipelines, and professional learnings derived from this engagement. Every effort has been made to adhere rigorously to the technical formatting guidelines and academic standards prescribed by the university.
-
-I sincerely hope that this report meets your expectations and adequately reflects the diligence and technical rigor invested during this industrial training. I would be honored to provide any further clarification or technical exposition you may require.
-
-#v(1.2cm)
-Sincerely yours, \
-#v(0.8cm)
-.................................................... \
-*Shahriar Hasan* \
-Student ID: 2002138 \
-Level: 4, Semester: II \
-Department of Electronics and Communication Engineering \
-Hajee Mohammad Danesh Science and Technology University (HSTU) \
-Dinajpur-5200, Bangladesh
-
-#pagebreak()
-
-// ─────────────────────────────────────────────────────────────
-// 3. CERTIFICATES
-// ─────────────────────────────────────────────────────────────
-#heading(level: 1, numbering: none)[Academic Supervisor's Certificate]
-#v(0.6cm)
-
-This is to certify that the internship report titled *"Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC"* is an authentic record of industrial attachment work performed by *Shahriar Hasan* (Student ID: *2002138*), a candidate for the degree of *Bachelor of Science in Electronics and Communication Engineering* from Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, Bangladesh.
-
-The internship was carried out in partial fulfillment of the requirements for the course *ECE 450: Industrial Training / Internship* under my academic supervision. The candidate has actively completed the prescribed period of training at Digicon Technologies PLC and has compiled the technical, architectural, and operational findings into this monograph.
-
-To the best of my knowledge, this report or any part thereof has not been submitted previously to any other university or institution for the award of any academic degree, diploma, or qualification.
-
-#v(2.5cm)
-#grid(
-  columns: (1fr, 1fr),
-  [
-    .................................................... \
-    *Academic Supervisor* \
-    Department of ECE \
-    Hajee Mohammad Danesh Science \
-    and Technology University (HSTU)
-  ],
-  [
-    .................................................... \
-    *Chairman* \
-    Examination Committee \
-    Department of ECE \
-    HSTU, Dinajpur-5200
-  ]
-)
-
-#pagebreak()
-
-// Industrial Certificate
 #heading(level: 1, numbering: none)[Industrial Internship Certificate]
 #v(0.3cm)
 
 #align(center)[
   #image("figures/cert.png", width: 92%)
 ]
-
-#pagebreak()
-
-// ─────────────────────────────────────────────────────────────
-// 4. CANDIDATE'S DECLARATION
-// ─────────────────────────────────────────────────────────────
-#heading(level: 1, numbering: none)[Candidate's Declaration]
-#v(0.6cm)
-
-I hereby solemnly declare that the work presented in this internship report titled *"Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC"* is an original account of the industrial training undertaken by me as an integral component of the curriculum for the award of the degree of *Bachelor of Science in Electronics and Communication Engineering* at Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, Bangladesh.
-
-#v(0.3cm)
-I further declare that:
-1. This monograph represents my authentic, individual effort under the joint guidance of my Academic Supervisor at HSTU and my Industrial Supervisor at Digicon Technologies PLC.
-2. This work, or any part thereof, has not been previously submitted to any other university, institute, or examining body for the award of any degree, diploma, fellowship, or professional qualification.
-3. All external ideas, technical documentations, code algorithms, architectural patterns, and academic papers referenced herein have been explicitly acknowledged and cited in compliance with international academic integrity and copyright conventions.
-4. All proprietary information concerning Digicon Technologies PLC has been reported in compliance with corporate non-disclosure agreements, focusing exclusively on technical, architectural, and educational aspects of backend web development without divulging proprietary customer identities or confidential business credentials.
-
-#v(2.0cm)
-#grid(
-  columns: (1fr, 1fr),
-  [
-    *Date:* October 04, 2026 \
-    *Place:* HSTU, Dinajpur
-  ],
-  [
-    .................................................... \
-    *Shahriar Hasan* \
-    Student ID: 2002138 \
-    Level: 4, Semester: II \
-    Department of Electronics and Communication Engineering \
-    Hajee Mohammad Danesh Science and Technology University
-  ]
-)
-
-#pagebreak()
-
-// ─────────────────────────────────────────────────────────────
-// 5. DEDICATION & ACKNOWLEDGEMENTS
-// ─────────────────────────────────────────────────────────────
-#heading(level: 1, numbering: none)[Dedication]
-#v(1fr)
-#align(center)[
-  #text(size: 12pt, style: "italic")[
-    This report is dedicated to my beloved parents, \
-    whose boundless sacrifices, unwavering prayers, and unconditional love \
-    have been the eternal beacon guiding every milestone of my academic journey. \
-    \
-    #v(0.8cm)
-    And to my respected teachers, mentors, and industry supervisors, \
-    who nurtured my passion for computer science, software engineering, \
-    and the pursuit of technological innovation.
-  ]
-]
-#v(2fr)
 
 #pagebreak()
 

@@ -168,29 +168,8 @@ def build_docx():
             run_cap.font.color.rgb = DARK_BLUE
 
     # ─────────────────────────────────────────────────────────
-    # 2. LETTER OF TRANSMITTAL
+    # 2. INDUSTRIAL INTERNSHIP CERTIFICATE
     # ─────────────────────────────────────────────────────────
-    add_chapter_title("Letter of Transmittal")
-    p = doc.add_paragraph()
-    p.add_run("Date: October 04, 2026\nTo:\nThe Chairman\nDepartment of Electronics and Communication Engineering\nHajee Mohammad Danesh Science and Technology University (HSTU)\nDinajpur-5200, Bangladesh.\n\n")
-    p.add_run("Subject: Submission of Internship Report on Backend Web Development at Digicon Technologies PLC.\n\n").bold = True
-    p.add_run("Dear Sir,\n\nIt is an immense privilege to submit my industrial attachment report titled “Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC”, completed as an indispensable requirement for the degree of Bachelor of Science in Electronics and Communication Engineering (Course Code: ECE 450).\n\nThis internship provided me with invaluable practical exposure to enterprise-level software engineering paradigms in an industry-leading IT and BPO enterprise. Throughout the tenure of my internship at Digicon Technologies PLC, I was actively embedded within the Backend Engineering division. I was entrusted with architecting, developing, and optimizing mission-critical backend services utilizing the JavaScript and TypeScript runtime ecosystems, specifically leveraging Node.js, Express.js, and NestJS alongside PostgreSQL, MongoDB, and Redis.\n\nSincerely yours,\n\n....................................................\nShahriar Hasan\nStudent ID: 2002138\nDepartment of ECE, HSTU\n")
-    doc.add_page_break()
-
-    # ─────────────────────────────────────────────────────────
-    # 3. CERTIFICATES
-    # ─────────────────────────────────────────────────────────
-    add_chapter_title("Academic Supervisor's Certificate")
-    p = doc.add_paragraph()
-    p.add_run("This is to certify that the internship report titled “Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC” is an authentic record of industrial attachment work performed by Shahriar Hasan (Student ID: 2002138), a candidate for the degree of Bachelor of Science in Electronics and Communication Engineering from Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, Bangladesh.\n\nThe internship was carried out in partial fulfillment of the requirements for the course ECE 450: Industrial Training / Internship under my academic supervision. To the best of my knowledge, this report has not been submitted previously to any other university or institution.\n\n\n")
-    
-    t_cert = doc.add_table(rows=1, cols=2)
-    remove_table_borders(t_cert)
-    t_cert.rows[0].cells[0].paragraphs[0].add_run("....................................................\nAcademic Supervisor\nDepartment of ECE, HSTU")
-    t_cert.rows[0].cells[1].paragraphs[0].add_run("....................................................\nChairman\nExamination Committee, HSTU")
-    doc.add_page_break()
-
-    # Industrial Certificate
     add_chapter_title("Industrial Internship Certificate")
     cert_img = os.path.join(PROJECT_ROOT, "figures", "cert.png")
     if os.path.exists(cert_img):
@@ -201,11 +180,11 @@ def build_docx():
     doc.add_page_break()
 
     # ─────────────────────────────────────────────────────────
-    # 4. DECLARATION, DEDICATION, ACKNOWLEDGEMENTS, ABSTRACT
+    # 3. ACKNOWLEDGEMENTS
     # ─────────────────────────────────────────────────────────
-    add_chapter_title("Candidate's Declaration")
-    p = doc.add_paragraph()
-    p.add_run("I hereby declare that the work presented in this internship report titled “Backend Web Development Using JavaScript Frameworks at Digicon Technologies PLC” is an original account of the industrial training undertaken by me for the award of the degree of Bachelor of Science in Electronics and Communication Engineering at Hajee Mohammad Danesh Science and Technology University (HSTU), Dinajpur, Bangladesh.\n\nDate: October 04, 2026\nPlace: HSTU, Dinajpur\n\n....................................................\nShahriar Hasan\nStudent ID: 2002138\nDepartment of ECE, HSTU\n")
+    add_chapter_title("Acknowledgements")
+    p_ack = doc.add_paragraph()
+    p_ack.add_run("First and foremost, all praises and profound gratitude are due to Almighty Allah, the Most Merciful and Most Beneficent, who bestowed upon me the health, intellectual resilience, and perseverance required to complete this industrial internship and compile this comprehensive report.\n\nI express my deepest gratitude, profound respect, and indebtedness to my respected Academic Supervisor in the Department of Electronics and Communication Engineering at Hajee Mohammad Danesh Science and Technology University (HSTU). His critical evaluations, scholarly feedback, and constructive academic stewardship were instrumental in contextualizing my industrial learnings within the foundational principles of computer science and communication engineering.\n\nI extend my heartfelt thanks to the Chairman and all distinguished faculty members of the Department of Electronics and Communication Engineering, HSTU, for providing a vibrant academic ecosystem, rigorous theoretical foundations, and continuous moral support throughout my undergraduate studies.\n\nI am immensely grateful to the executive management and engineering leadership of Digicon Technologies PLC for granting me the invaluable opportunity to undertake this industrial attachment. In particular, I express my sincere appreciation to my Industrial Supervisor (Lead Software Architect) and the senior software engineers within the Software Engineering Division. Their hands-on mentorship, architectural guidance, in-depth code reviews, and constant encouragement allowed me to bridge the critical gap between academic software concepts and high-throughput enterprise production systems.\n\nFinally, words cannot adequately express my lifelong gratitude to my parents and family. Their boundless sacrifices, endless patience, and unyielding faith in my abilities have been my greatest pillar of strength.\n\n\nShahriar Hasan\nStudent ID: 2002138\nHSTU, Dinajpur\nOctober, 2026\n")
     doc.add_page_break()
 
     add_chapter_title("Executive Summary")
