@@ -257,6 +257,46 @@ def build_docx():
     p = doc.add_paragraph()
     p.add_run("Node.js combines Google's V8 C++ JavaScript engine with the Libuv asynchronous I/O library, employing an event-driven, single-threaded execution model that offloads blocking I/O to operating system threads. This architecture enables high-concurrency network servers with minimal memory footprint.")
 
+    p_tbl = doc.add_paragraph()
+    p_tbl.add_run("The Node.js Libuv Event Loop operates as a continuous state machine processing callbacks across distinct sequential phases (Table 3.1):")
+    
+    t_loop = doc.add_table(rows=7, cols=2)
+    t_loop.alignment = WD_TABLE_ALIGNMENT.CENTER
+    phases = [
+        ("Phase", "Operational Function and Responsibilities"),
+        ("Timers", "Executes callbacks scheduled by setTimeout() and setInterval()."),
+        ("Pending I/O", "Executes I/O callbacks deferred from the previous loop iteration."),
+        ("Idle, Prepare", "Internal runtime routines utilized exclusively by the Libuv subsystem."),
+        ("Poll", "Retrieves new I/O events, executes I/O-related callbacks, and blocks if empty."),
+        ("Check", "Executes callbacks invoked via setImmediate()."),
+        ("Close Callbacks", "Handles abrupt connection closures (e.g., socket.on('close'))."),
+    ]
+    for idx, (ph, desc) in enumerate(phases):
+        row = t_loop.rows[idx]
+        c0, c1 = row.cells[0], row.cells[1]
+        c0.width = Inches(1.8)
+        c1.width = Inches(4.5)
+        p0 = c0.paragraphs[0]
+        r0 = p0.add_run(ph)
+        r0.bold = True
+        if idx == 0:
+            r0.font.color.rgb = RGBColor(0x0C, 0x2C, 0x56)
+        else:
+            r0.font.color.rgb = RGBColor(0x18, 0x4C, 0x78)
+        p1 = c1.paragraphs[0]
+        r1 = p1.add_run(desc)
+        if idx == 0:
+            r1.bold = True
+            r1.font.color.rgb = RGBColor(0x0C, 0x2C, 0x56)
+        set_cell_margins(c0, top=80, bottom=80, left=100, right=100)
+        set_cell_margins(c1, top=80, bottom=80, left=100, right=100)
+        
+    p_cap = doc.add_paragraph()
+    p_cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_cap = p_cap.add_run("Table 3.1: Phases of the Node.js Libuv Event Loop Execution Model.")
+    r_cap.italic = True
+    r_cap.font.size = Pt(10)
+
     add_section_title("3.2 Express.js versus NestJS Frameworks")
     p = doc.add_paragraph()
     p.add_run("Express.js offers a minimalist, functional middleware pipeline ideal for lightweight microservices. NestJS provides an opinionated, TypeScript-native, modular architecture featuring Dependency Injection (DI) and declarative validation pipes, making it the preferred choice for complex enterprise SaaS platforms.")

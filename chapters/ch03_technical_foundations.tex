@@ -29,26 +29,30 @@ The Node.js Event Loop operates as a continuous state machine that processes cal
 
 \begin{figure}[htbp]
     \centering
-    \begin{minipage}{0.85\textwidth}
-        \centering
-        \fbox{\begin{minipage}{0.95\textwidth}
-            \centering \vspace{0.2cm}
-            {\bfseries \color{darkblue} The Node.js Libuv Event Loop Phases} \par \vspace{0.3cm}
-            \begin{tabular}{|l|l|}
-                \hline
-                \textbf{Phase} & \textbf{Operational Function} \\
-                \hline
-                \textbf{Timers} & Executes callbacks scheduled by \texttt{setTimeout()} and \texttt{setInterval()} \\
-                \textbf{Pending I/O} & Executes I/O callbacks deferred from the previous loop iteration \\
-                \textbf{Idle, Prepare} & Internal runtime routines utilized exclusively by Libuv \\
-                \textbf{Poll} & Retrieves new I/O events; executes I/O related callbacks; blocks if empty \\
-                \textbf{Check} & Executes callbacks invoked via \texttt{setImmediate()} \\
-                \textbf{Close Callbacks} & Handles abrupt connection closures (e.g., \texttt{socket.on('close')}) \\
-                \hline
-            \end{tabular} \par \vspace{0.2cm}
-            \textit{Note: \texttt{process.nextTick()} and Microtask Promise queues execute immediately after each phase.} \par \vspace{0.2cm}
-        \end{minipage}}
-    \end{minipage}
+    \setlength{\fboxsep}{12pt}
+    \setlength{\fboxrule}{0.8pt}
+    \fcolorbox{grayborder}{lightgraybg}{%
+        \begin{minipage}{\dimexpr\textwidth - 2\fboxsep - 2\fboxrule\relax}
+            \centering
+            {\large\bfseries\color{darkblue} The Node.js Libuv Event Loop Phases} \par \vspace{0.35cm}
+            \renewcommand{\arraystretch}{1.35}
+            \begin{tabularx}{\textwidth}{>{\bfseries\color{primaryblue}}l >{\raggedright\arraybackslash}X}
+                \toprule
+                \textbf{\color{darkblue}Phase} & \textbf{\color{darkblue}Operational Function and Responsibilities} \\
+                \midrule
+                Timers & Executes callbacks scheduled by \texttt{setTimeout()} and \texttt{setInterval()}. \\[3pt]
+                Pending I/O & Executes I/O callbacks deferred from the previous loop iteration. \\[3pt]
+                Idle, Prepare & Internal runtime routines utilized exclusively by the Libuv subsystem. \\[3pt]
+                Poll & Retrieves new I/O events, executes I/O-related callbacks, and blocks if empty. \\[3pt]
+                Check & Executes callbacks invoked via \texttt{setImmediate()}. \\[3pt]
+                Close Callbacks & Handles abrupt connection closures (e.g., \texttt{socket.on('close')}). \\
+                \bottomrule
+            \end{tabularx} \par \vspace{0.25cm}
+            \raggedright
+            {\footnotesize \textit{\textbf{Note:} \texttt{process.nextTick()} and Microtask Promise queues execute immediately after each phase transition before the loop progresses.}}
+        \end{minipage}%
+    }
+    \vspace{0.25cm}
     \caption{Phases of the Node.js Libuv Event Loop Execution Model.}
     \label{fig:node_event_loop_flow}
 \end{figure}
