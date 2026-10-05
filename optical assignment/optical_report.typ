@@ -9,11 +9,7 @@
   header: locate(loc => {
     let page_number = counter(page).at(loc).first()
     if page_number > 2 [
-      #grid(
-        columns: (1fr, auto),
-        align(left)[#text(size: 9pt, fill: rgb("#555555"), font: "Times New Roman")[Optical Fiber Communication Laboratory Report]],
-        align(right)[#text(size: 9pt, fill: rgb("#555555"), font: "Times New Roman")[Shahriar Hasan (ID: 2002138)]]
-      )
+      #align(right)[#text(size: 8.5pt, fill: rgb("#666666"), font: "Times New Roman", style: "italic")[Optical Fiber Communications Sessional]]
       #v(-4pt)
       #line(length: 100%, stroke: 0.5pt + rgb("#CCCCCC"))
     ]
@@ -27,26 +23,35 @@
 )
 
 #set text(font: "Times New Roman", size: 12pt, lang: "en")
-#set par(justify: true, leading: 0.8em, first-line-indent: 1.5em)
+#set par(justify: true, leading: 0.75em, first-line-indent: 0pt)
+#set block(spacing: 1.0em)
+
+// Ensure tables, figures, lists, enums, and outline have clean 0pt first-line indent
+#show table: set par(first-line-indent: 0pt)
+#show figure.caption: set par(first-line-indent: 0pt)
+#show list: set par(first-line-indent: 0pt)
+#show enum: set par(first-line-indent: 0pt)
+#show outline: set par(first-line-indent: 0pt)
+
+// Clean academic list indentation
+#set list(indent: 0.8em, body-indent: 0.5em)
+#set enum(indent: 0.8em, body-indent: 0.5em)
 
 // Heading Styling (HSTU Formal Academic Monograph Standard)
-#show heading.where(level: 1): it => [
-  #pagebreak(weak: true)
-  #block(width: 100%)[
-    #v(10pt)
-    #if it.numbering != none [
-      #set align(left)
-      #set text(size: 15pt, weight: "bold", fill: rgb("#0C2C56"))
-      #text(size: 13pt, fill: rgb("#184C78"))[Experiment #counter(heading).display() \ ]
-      #v(4pt)
-      #it.body
-      #v(14pt)
-    ] else [
-      #set align(center)
-      #set text(size: 16pt, weight: "bold", fill: rgb("#0C2C56"))
-      #it.body
-      #v(14pt)
-    ]
+#show heading.where(level: 1): it => block(width: 100%)[
+  #v(14pt)
+  #if it.numbering != none [
+    #set align(left)
+    #set text(size: 15pt, weight: "bold", fill: rgb("#0C2C56"))
+    #text(size: 13pt, fill: rgb("#184C78"))[Experiment #counter(heading).display() \ ]
+    #v(4pt)
+    #it.body
+    #v(14pt)
+  ] else [
+    #set align(center)
+    #set text(size: 16pt, weight: "bold", fill: rgb("#0C2C56"))
+    #it.body
+    #v(14pt)
   ]
 ]
 
@@ -144,33 +149,68 @@
 #pagebreak()
 
 // ─────────────────────────────────────────────────────────────
-// TABLE OF CONTENTS
+// TABLE OF CONTENTS (PAGE 2)
 // ─────────────────────────────────────────────────────────────
 #set page(numbering: "1")
 #counter(page).update(2)
 
-#outline(
-  title: [Table of Contents],
-  depth: 2,
-  indent: 1.5em
-)
-
-#v(20pt)
-#line(length: 100%, stroke: 0.8pt + rgb("#DCE0E6"))
-#v(10pt)
-
-#align(center)[
-  #text(size: 12pt, weight: "bold", fill: rgb("#0C2C56"))[Executive Overview of Conducted Laboratory Modules]
+#block[
+  #show outline.entry.where(level: 1): it => {
+    v(4pt, weak: true)
+    strong(it)
+  }
+  #set text(size: 9.5pt)
+  #set par(leading: 0.55em)
+  #outline(
+    title: [Table of Contents],
+    depth: 2,
+    indent: 1.0em
+  )
 ]
 
-This laboratory assignment encompasses six fundamental computational simulation experiments covering modern optical fiber communication engineering. The experiments model semiconductor optoelectronic sources (LED and Fabry-Perot LASER diodes), external optical modulators (Mach-Zehnder and Electro-Absorption modulators), photodetector receiver noise and bit error rate performance (PIN and APD architectures), passive optical link power and dispersion rise-time budgeting, digital baseband line coding with eye diagram signal integrity analysis, and multi-channel Wavelength Division Multiplexing (WDM) combined with Optical Time-Domain Reflectometry (OTDR) fault and attenuation diagnosis.
+#pagebreak()
+
+// ─────────────────────────────────────────────────────────────
+// EXECUTIVE OVERVIEW (NEW PAGE - PAGE 3)
+// ─────────────────────────────────────────────────────────────
+#heading(numbering: none)[Executive Overview of Conducted Laboratory Modules]
+
+#line(length: 100%, stroke: 0.8pt + rgb("#DCE0E6"))
+#v(4pt)
+
+#block[
+  #set text(size: 10.5pt)
+  #set par(leading: 0.65em)
+  This laboratory assignment encompasses six fundamental computational simulation experiments covering modern physical-layer optical fiber communication engineering. The experiments model semiconductor optoelectronic sources (LED and Fabry-Perot LASER diodes), external optical modulators (Mach-Zehnder and Electro-Absorption modulators), photodetector receiver noise and bit error rate performance (PIN and APD architectures), passive optical link power and dispersion rise-time budgeting, digital baseband line coding with eye diagram signal integrity analysis, and multi-channel Wavelength Division Multiplexing (WDM) combined with Optical Time-Domain Reflectometry (OTDR) fault and attenuation diagnosis.
+
+  #v(4pt)
+  #align(center)[
+    #table(
+      columns: (auto, 1.4fr, 2.4fr),
+      fill: (x, y) => if y == 0 { rgb("#E8EEF5") } else { none },
+      stroke: 0.5pt + rgb("#CCCCCC"),
+      inset: (x: 6pt, y: 3.2pt),
+      [*Exp.*], [*Experiment Title*], [*Primary Physical Phenomena & Engineering Concepts*],
+      [1], [Characteristics of LED and Semiconductor LASER], [Spontaneous vs. stimulated emission, $P-I$ curves, threshold current ($I_"th"$), differential quantum efficiency, wall-plug efficiency, and small-signal modulation resonance.],
+      [2], [Optical Modulation Using MZM and EAM], [External intensity modulation, electro-optic Pockels interference ($V_pi$), Franz-Keldysh electro-absorption, 1 Gb/s NRZ drive waveform synthesis, and Extinction Ratio (ER).],
+      [3], [Noise, SNR, Q-Factor, and BER of PIN and APD Receivers], [Photodiode responsivity ($R$), thermal noise, Poissonian shot noise, avalanche carrier multiplication gain ($M$), excess noise factor ($F$), and sensitivity at $10^(-9)$ BER.],
+      [4], [Power Budget and Rise-Time Budget of an Optical Link], [Passive link attenuation ($alpha L + N_c L_c + N_s L_s$), power margin verification, chromatic dispersion rise-time ($t_"chrom"$), system rise-time ($t_"sys"$), and NRZ criteria ($0.7 / R_b$).],
+      [5], [Line Coding and Eye-Pattern Signal Integrity Analysis], [Unipolar NRZ, 50% duty-cycle RZ, Manchester encoding, low-pass channel bandwidth limitations, additive Gaussian noise, and eye diagram ISI analysis.],
+      [6], [WDM Spectrum and OTDR Fiber Diagnostics], [Multi-channel WDM spectral multiplexing, channel grid spacing limits, two-way Rayleigh backscatter attenuation ($alpha$), splice loss detection, and segmented linear regression.]
+    )
+  ]
+
+  #v(4pt)
+  The simulation scripts are fully implemented in MATLAB, and the corresponding empirical outputs, time-domain waveforms, eye patterns, and spectral diagrams are systematically detailed across the subsequent sections.
+]
 
 #set heading(numbering: "1.1")
 
 // ─────────────────────────────────────────────────────────────
 // EXPERIMENT 1
 // ─────────────────────────────────────────────────────────────
-= Characteristics of Light Emitting Diode (LED) and Semiconductor LASER Diode <exp1>
+#pagebreak()
+= Characteristics of LED and Semiconductor LASER <exp1>
 
 == Objectives
 - Empirically investigate and compare the optical power versus injection current ($P-I$) static transfer characteristics for a Light Emitting Diode (LED) and a semiconductor LASER diode.
@@ -316,7 +356,8 @@ fprintf('LASER slope efficiency  = %.3f W/A\n', etaLaser * h * nu / q);
 // ─────────────────────────────────────────────────────────────
 // EXPERIMENT 2
 // ─────────────────────────────────────────────────────────────
-= Optical External Modulation Using Mach-Zehnder (MZM) and Electro-Absorption (EAM) Modulators <exp2>
+#pagebreak()
+= Optical Modulation Using MZM and EAM <exp2>
 
 == Objectives
 - Characterize the non-linear transfer functions of interferometric Mach-Zehnder Modulators (MZM) and semiconductor Electro-Absorption Modulators (EAM).
@@ -451,7 +492,8 @@ fprintf('EAM Extinction Ratio = %.2f dB\n', ERe);
 // ─────────────────────────────────────────────────────────────
 // EXPERIMENT 3
 // ─────────────────────────────────────────────────────────────
-= Noise, Signal-to-Noise Ratio (SNR), Q-Factor, and Bit Error Rate (BER) Analysis of PIN and APD Receivers <exp3>
+#pagebreak()
+= Noise, SNR, Q-Factor, and BER of PIN and APD Receivers <exp3>
 
 == Objectives
 - Formulate the fundamental noise mechanisms limiting optical front-ends: shot noise, dark current noise, and thermal (Johnson-Nyquist) noise.
@@ -593,6 +635,7 @@ fprintf('APD Sensitivity at BER 10^-9 = %.1f dBm\n', P1dBm(idxAPD));
 // ─────────────────────────────────────────────────────────────
 // EXPERIMENT 4
 // ─────────────────────────────────────────────────────────────
+#pagebreak(weak: true)
 = Optical Link Budget Design: Power Budget and Rise-Time Budget Analysis <exp4>
 
 == Objectives
@@ -737,6 +780,7 @@ if tsys <= allowedRise, fprintf('Rise-Time Budget: PASS\n'); else, fprintf('Rise
 // ─────────────────────────────────────────────────────────────
 // EXPERIMENT 5
 // ─────────────────────────────────────────────────────────────
+#pagebreak(weak: true)
 = Digital Optical Transmission Line Coding and Eye-Pattern Signal Integrity Analysis <exp5>
 
 == Objectives
@@ -862,6 +906,7 @@ title('Narrower Bandwidth, Higher Noise'); ylim([-0.3 1.3]); grid on;
 // ─────────────────────────────────────────────────────────────
 // EXPERIMENT 6
 // ─────────────────────────────────────────────────────────────
+#pagebreak(weak: true)
 = Wavelength Division Multiplexing (WDM) Spectrum and Optical Time-Domain Reflectometry (OTDR) Fiber Diagnostics <exp6>
 
 == Objectives
