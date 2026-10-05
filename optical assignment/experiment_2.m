@@ -1,0 +1,202 @@
+clear ;
+clc ;
+close all ;
+%% =========================================================
+% MZM AND EAM OPTICAL MODULATORS
+% Static Transfer Characteristics and NRZ Modulation
+% ==========================================================
+% % Basic Parameters
+Pin = 10 e -3;
+
+% Input optical power ( W )
+
+Vpi = 4;
+
+% MZM half - wave voltage ( V )
+
+%% =========================================================
+% PART 1: STATIC MZM CHARACTERISTIC
+% ==========================================================
+V = linspace (0 ,2* Vpi ,1000) ;
+% MZM output power
+PMZM = Pin * cos ( pi * V /(2* Vpi ) ) .^2;
+
+%% =========================================================
+% PART 2: STATIC EAM CHARACTERISTIC
+% ==========================================================
+VR = linspace (0 ,4 ,1000) ;
+% EAM parameters
+L = 200 e -6;
+
+% Device length ( m )
+
+alpha0 = 1000;
+
+% Base absorption coefficient (1/ m )
+
+kAlpha = 4000;
+
+% Voltage - dependent coefficient
+
+% EAM output power
+PEAM = Pin * exp ( -( alpha0 + kAlpha * VR ) * L ) ;
+
+%% =========================================================
+% PART 3: UNIPOLAR NRZ INPUT
+% ==========================================================
+bits = [1 0 1 1 0 0 1 0 1 0];
+Rb = 1 e9 ;
+
+% Bit rate = 1 Gb / s
+
+sps = 100;
+
+% Samples per bit
+
+% NRZ waveform
+data = kron ( bits , ones (1 , sps ) ) ;
+
+
+% % Time axis
+Tb = 1/ Rb ;
+dt = Tb / sps ;
+t = (0: length ( data ) -1) * dt ;
+
+%% =========================================================
+% PART 4: MZM OPTICAL MODULATION
+% ==========================================================
+% Map digital data to MZM voltage
+%
+% Bit 1 -> 0 V
+% Bit 0 -> Vpi
+VMZM = Vpi *(1 - data ) ;
+% MZM output optical power
+outMZM = Pin * ...
+cos ( pi * VMZM /(2* Vpi ) ) .^2;
+
+%% =========================================================
+% PART 5: EAM OPTICAL MODULATION
+% ==========================================================
+% Map digital data to reverse bias
+%
+% Bit 0 -> 0 V
+% Bit 1 -> 4 V
+VEAM = 4* data ;
+% EAM output optical power
+outEAM = Pin * ...
+exp ( -( alpha0 + kAlpha * VEAM ) * L ) ;
+
+%% =========================================================
+% PART 6: EXTINCTION RATIO
+% ==========================================================
+% MZM maximum and minimum output powers
+PmaxMZM = max ( outMZM ) ;
+PminMZM = min ( outMZM ) ;
+% EAM maximum and minimum output powers
+PmaxEAM = max ( outEAM ) ;
+PminEAM = min ( outEAM ) ;
+
+% Extinction ratio
+ERm = 10* log10 ( PmaxMZM / PminMZM ) ;
+
+
+ERe = 10* log10 ( PmaxEAM / PminEAM ) ;
+
+%% =========================================================
+% PART 7: PLOTS
+% ==========================================================
+figure ( ’ Color ’ , ’w ’) ;
+
+% % MZM transfer characteristic
+subplot (2 ,2 ,1) ;
+plot (V , PMZM *1 e3 ,...
+’ LineWidth ’ ,1.5) ;
+xlabel ( ’ MZM Voltage ( V ) ’) ;
+ylabel ( ’ Output Power ( mW ) ’) ;
+title ( ’ MZM Transfer Characteristic ’) ;
+grid on ;
+
+% % EAM transfer characteristic
+subplot (2 ,2 ,2) ;
+plot ( VR , PEAM *1 e3 ,...
+’ LineWidth ’ ,1.5) ;
+xlabel ( ’ Reverse - Bias Magnitude ( V ) ’) ;
+ylabel ( ’ Power ( mW ) ’) ;
+title ( ’ EAM Transfer Characteristic ’) ;
+grid on ;
+
+% % Input NRZ data
+subplot (2 ,2 ,3) ;
+stairs ( t *1 e9 , data ,...
+’k ’ , ’ LineWidth ’ ,1.3) ;
+xlabel ( ’ Time ( ns ) ’) ;
+ylabel ( ’ Bit Level ’) ;
+title ( ’ Input NRZ Data ’) ;
+ylim ([ -0.2 1.2]) ;
+grid on ;
+
+% % Modulated optical output
+
+
+subplot (2 ,2 ,4) ;
+plot ( t *1 e9 ,...
+outMZM *1 e3 ,...
+’b ’ , ’ LineWidth ’ ,1.3) ;
+hold on ;
+plot ( t *1 e9 ,...
+outEAM *1 e3 ,...
+’r - - ’ , ’ LineWidth ’ ,1.3) ;
+xlabel ( ’ Time ( ns ) ’) ;
+ylabel ( ’ Power ( mW ) ’) ;
+legend ( ’ MZM ’ , ’ EAM ’) ;
+title ( ’ Modulated Optical Output ’) ;
+grid on ;
+
+%% =========================================================
+% DISPLAY RESULTS
+% ==========================================================
+fprintf ( ’\ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ MZM AND EAM MODULATOR RESULTS \ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ Input optical power = %.2 f mW \ n ’ ,...
+Pin *1 e3 ) ;
+fprintf ( ’ MZM Vpi
+Vpi ) ;
+
+= %.2 f V \ n ’ ,...
+
+fprintf ( ’ EAM device length
+L *1 e6 ) ;
+
+= %.2 f um \ n ’ ,...
+
+fprintf ( ’\ n ’) ;
+fprintf ( ’ MZM maximum power
+PmaxMZM *1 e3 ) ;
+
+= %.4 f mW \ n ’ ,...
+
+fprintf ( ’ MZM minimum power
+PminMZM *1 e3 ) ;
+
+= %.4 e mW \ n ’ ,...
+
+fprintf ( ’ MZM extinction ratio = %.2 f dB \ n ’ ,...
+ERm ) ;
+fprintf ( ’\ n ’) ;
+fprintf ( ’ EAM maximum power
+PmaxEAM *1 e3 ) ;
+
+= %.4 f mW \ n ’ ,...
+
+fprintf ( ’ EAM minimum power
+
+= %.4 e mW \ n ’ ,...
+
+
+PminEAM *1 e3 ) ;
+fprintf ( ’ EAM extinction ratio = %.2 f dB \ n ’ ,...
+ERe ) ;
+fprintf ( ’\ n ’) ;
+fprintf ( ’ Simulation completed successfully .\ n ’) ;

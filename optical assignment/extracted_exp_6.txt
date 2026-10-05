@@ -1,0 +1,250 @@
+6.7
+
+Complete MATLAB Code
+
+clear ;
+clc ;
+
+36
+
+Figure 9: Effect of Multiple Splices on the OTDR Trace.
+close all ;
+rng (20) ;
+%% =========================================================
+% PART 1: WDM TRANSMISSION
+% ==========================================================
+lambda = linspace (1548 ,1555 ,5000) ;
+% Four WDM channel center wavelengths ( nm )
+centers = [1549 1550.5 1552 1553.5];
+% Spectral width ( nm )
+sigmaLambda = 0.06;
+% Channel powers (1 mW each )
+Pchannel = 1e -3 * ones (1 ,4) ;
+% Channel attenuation ( dB / km )
+alphaWDM = [0.20 0.21 0.22 0.23];
+% Fiber length ( km )
+L = 40;
+% Initialize transmitted and received spectra
+Stx = zeros ( size ( lambda ) ) ;
+Srx = zeros ( size ( lambda ) ) ;
+% Generate WDM channels
+for k = 1: length ( centers )
+shape = exp ( -0.5*(( lambda - centers ( k ) ) / sigmaLambda ) .^2) ...
+/( sqrt (2* pi ) * sigmaLambda ) ;
+
+37
+
+Stx = Stx + Pchannel ( k ) * shape ;
+% Received spectrum after fiber attenuation
+Srx = Srx + ...
+Pchannel ( k ) *10^( - alphaWDM ( k ) * L /10) * shape ;
+end
+% Received channel powers
+PrxChannels = Pchannel .* 10.^( - alphaWDM * L /10) ;
+% % Plot transmitted and received WDM spectra
+figure ( ’ Color ’ , ’w ’) ;
+plot ( lambda ,...
+10* log10 ( max ( Stx ,1 e -15) /1 e -3) ,...
+’b ’ , ’ LineWidth ’ ,1.4) ;
+hold on ;
+plot ( lambda ,...
+10* log10 ( max ( Srx ,1 e -15) /1 e -3) ,...
+’r ’ , ’ LineWidth ’ ,1.4) ;
+xlabel ( ’ Wavelength ( nm ) ’) ;
+ylabel ( ’ Spectral Density ( dBm / nm ) ’) ;
+legend ( ’ Transmitted ’ , ’ Received ’) ;
+title ( ’ WDM Transmitted and Received Spectrum ’) ;
+ylim ([ -70 15]) ;
+grid on ;
+% % Display received channel powers
+disp ( ’ ’) ;
+disp ( ’ Received Channel Powers : ’) ;
+for k = 1:4
+fprintf ( ’ Channel % d (%.1 f nm ) : %.4 f dBm \ n ’ ,...
+k , centers ( k ) ,...
+10* log10 ( PrxChannels ( k ) /1 e -3) ) ;
+end
+
+%% =========================================================
+% PART 2: OTDR ATTENUATION AND SPLICE LOSS
+% ==========================================================
+c = 3 e8 ;
+ng = 1.468;
+
+% Speed of light ( m / s )
+% Group refractive index
+
+% Distance ( km )
+z = 0:0.01:40;
+% Fiber attenuation
+alpha = 0.20;
+
+% dB / km
+
+% First splice
+
+38
+
+splicePosition = 15; % km
+spliceLoss = 0.8;
+% dB
+% Generate ideal OTDR trace
+traceDB = -35 ...
+- 2* alpha * z ...
+- 2* spliceLoss *( z >= splicePosition ) ;
+% Add measurement noise
+traceDB = traceDB + 0.04* randn ( size ( z ) ) ;
+% % Calculate round - trip time
+roundTripTime = 2* ng *( z *1000) / c ;
+% % Select regions for attenuation fitting
+mask1 = z >= 2 & z <= 12;
+mask2 = z >= 18 & z <= 30;
+% Linear fitting before and after splice
+fit1 = polyfit ( z ( mask1 ) , traceDB ( mask1 ) ,1) ;
+fit2 = polyfit ( z ( mask2 ) , traceDB ( mask2 ) ,1) ;
+% Estimate attenuation
+alphaEstimated = - fit1 (1) /2;
+% Estimate splice loss
+spliceEstimated = ...
+( polyval ( fit1 ,15) - polyval ( fit2 ,15) ) /2;
+
+% % Plot OTDR trace
+figure ( ’ Color ’ , ’w ’) ;
+subplot (2 ,1 ,1) ;
+plot (z , traceDB , ’ LineWidth ’ ,1.2) ;
+grid on ;
+xlabel ( ’ Distance ( km ) ’) ;
+ylabel ( ’ Raw Return Level ( dB ) ’) ;
+title ( ’ OTDR Trace vs Distance ’) ;
+
+subplot (2 ,1 ,2) ;
+plot ( roundTripTime *1 e6 , traceDB , ’ LineWidth ’ ,1.2) ;
+grid on ;
+xlabel ( ’ Round - trip Time (\ mus ) ’) ;
+ylabel ( ’ Raw Return Level ( dB ) ’) ;
+title ( ’ OTDR Trace vs Round - trip Time ’) ;
+
+39
+
+% % Display estimated values
+fprintf ( ’\ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ OTDR RESULTS \ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ Attenuation = %.6 f dB / km \ n ’ ,...
+alphaEstimated ) ;
+fprintf ( ’ Splice loss = %.6 f dB \ n ’ ,...
+spliceEstimated ) ;
+
+%% =========================================================
+% PART 3: EFFECT OF WDM CHANNEL SPACING
+% ==========================================================
+% Close channel spacing = 0.12 nm
+centersClose = 1551 + (0:3) *0.12;
+StxClose = zeros ( size ( lambda ) ) ;
+for k = 1:4
+shape = exp ( -0.5*(( lambda - centersClose ( k ) ) / sigmaLambda ) .^2) ...
+/( sqrt (2* pi ) * sigmaLambda ) ;
+StxClose = StxClose + Pchannel ( k ) * shape ;
+end
+
+% % Plot channel spacing comparison
+figure ( ’ Color ’ , ’w ’) ;
+plot ( lambda , Stx *1 e3 ,...
+’ LineWidth ’ ,1.2) ;
+hold on ;
+plot ( lambda , StxClose *1 e3 ,...
+’ LineWidth ’ ,1.2) ;
+xlabel ( ’ Wavelength ( nm ) ’) ;
+ylabel ( ’ Density ( mW / nm ) ’) ;
+legend ( ’ 1.50 nm spacing ’ ,...
+’ 0.12 nm spacing ’) ;
+title ( ’ Effect of WDM Channel Spacing ’) ;
+grid on ;
+
+%% =========================================================
+% PART 4: EFFECT OF TWO SPLICES
+
+40
+
+% ==========================================================
+% First splice at 15 km
+baseClean = -35 ...
+- 2* alpha * z ...
+- 2* spliceLoss *( z >= 15) ;
+% Second splice :
+% Position = 25 km
+% One - way splice loss = 0.5 dB
+twoClean = baseClean ...
+- 2*0.5*( z >= 25) ;
+
+% % Plot one - splice vs two - splice OTDR trace
+figure ( ’ Color ’ , ’w ’) ;
+plot (z , baseClean ,...
+’ LineWidth ’ ,1.2) ;
+hold on ;
+plot (z , twoClean ,...
+’ LineWidth ’ ,1.2) ;
+grid on ;
+xlabel ( ’ Distance ( km ) ’) ;
+ylabel ( ’ Raw Return Level ( dB ) ’) ;
+legend ( ’ One splice ’ , ’ Two splices ’) ;
+title ( ’ Effect of Multiple Splices ’) ;
+
+%% =========================================================
+% PART 5: ESTIMATE BOTH SPLICE LOSSES
+% ==========================================================
+rng (20) ;
+% Add noise
+twoNoisy = twoClean + 0.04* randn ( size ( z ) ) ;
+%
+a
+b
+d
+
+Fitting regions
+= z >= 2 & z <= 12;
+= z >= 18 & z <= 23;
+= z >= 28 & z <= 36;
+
+% Linear fits
+fa = polyfit ( z ( a ) , twoNoisy ( a ) ,1) ;
+fb = polyfit ( z ( b ) , twoNoisy ( b ) ,1) ;
+fd = polyfit ( z ( d ) , twoNoisy ( d ) ,1) ;
+% First splice loss at 15 km
+loss15 = ...
+
+41
+
+( polyval ( fa ,15) - polyval ( fb ,15) ) /2;
+% Second splice loss at 25 km
+loss25 = ...
+( polyval ( fb ,25) - polyval ( fd ,25) ) /2;
+
+% % Display final results
+fprintf ( ’\ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ MULTIPLE SPLICE RESULTS \ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ First splice
+loss15 ) ;
+
+(15 km ) = %.6 f dB \ n ’ ,...
+
+fprintf ( ’ Second splice (25 km ) = %.6 f dB \ n ’ ,...
+loss25 ) ;
+fprintf ( ’\ n ’) ;
+fprintf ( ’ Expected attenuation
+alpha ) ;
+
+= %.2 f dB / km \ n ’ ,...
+
+fprintf ( ’ Expected first splice = %.2 f dB \ n ’ ,...
+spliceLoss ) ;
+fprintf ( ’ Expected second splice = %.2 f dB \ n ’ ,...
+0.5) ;
+fprintf ( ’\ nSimulation completed successfully .\ n ’) ;
+
+42
+
+

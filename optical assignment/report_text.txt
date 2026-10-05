@@ -1,0 +1,2142 @@
+Contents
+1 Experiment : Characteristics of LED and Semiconductor LASER
+1.1 Objectives . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.2 Theory and Relevant Equations . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.3 Simulation Parameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.4 Procedure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.5 Results and Generated Figures . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.6 Parameter Comparisons and Model Limitations . . . . . . . . . . . . . . . . . . .
+1.7 Complete MATLAB Code . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+3
+3
+3
+3
+3
+4
+4
+4
+
+2 Experiment : Optical Modulation Using MZM and EAM
+2.1 Objectives . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2 Theory and Relevant Equations . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3 Simulation Parameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.4 Procedure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.5 Results and Generated Figures . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.6 Parameter Comparisons and Model Limitations . . . . . . . . . . . . . . . . . . .
+2.7 Complete MATLAB Code . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+9
+9
+9
+9
+10
+10
+10
+11
+
+3 Experiment : Noise, SNR, Q-Factor, and BER of PIN and APD Receivers
+3.1 Objectives . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.2 Theory and Relevant Equations . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.3 Simulation Parameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.4 Procedure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.5 Results and Generated Figures . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.6 Parameter Comparisons and Model Limitations . . . . . . . . . . . . . . . . . . .
+3.7 Complete MATLAB Code . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+16
+16
+16
+16
+17
+17
+17
+17
+
+4 Experiment : Power Budget and Rise-Time Budget of a Fiber-Optic Link
+4.1 Objectives . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.2 Theory and Relevant Equations . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.3 Simulation Parameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.4 Procedure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.5 Results and Generated Figures . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.6 Parameter Comparisons and Model Limitations . . . . . . . . . . . . . . . . . . .
+4.7 Complete MATLAB Code . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+23
+23
+23
+23
+23
+24
+24
+24
+
+5 Experiment : Line Coding and Eye-Pattern Analysis
+5.1 Objectives . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+5.2 Theory and Relevant Equations . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+5.3 Simulation Parameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+5.4 Procedure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+5.5 Results and Generated Figures . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+5.6 Parameter Comparisons and Model Limitations . . . . . . . . . . . . . . . . . . .
+5.7 Complete MATLAB Code . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+28
+28
+28
+28
+28
+28
+29
+30
+
+6 Experiment : WDM Spectrum, Fiber Attenuation, and OTDR Simulation
+6.1 Objectives . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+6.2 Theory and Relevant Equations . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+6.3 Simulation Parameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+6.4 Procedure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+34
+34
+34
+34
+35
+
+1
+
+6.5
+6.6
+6.7
+
+Results and Generated Figures . . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+Parameter Comparisons and Model Limitations . . . . . . . . . . . . . . . . . . . 35
+Complete MATLAB Code . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+
+2
+
+1
+
+Experiment : Characteristics of LED and Semiconductor LASER
+
+1.1
+
+Objectives
+
+• Compare the optical output power characteristics of an LED and a semiconductor LASER
+under varying injection currents.
+• Understand and determine the LASER threshold current (Ith ) and external differential
+quantum efficiency.
+• Analyze and compare the electrical-to-optical wall-plug efficiencies of both light sources.
+• Evaluate and compare the small-signal modulation responses and frequency bandwidths
+of LED and LASER devices.
+
+1.2
+
+Theory and Relevant Equations
+
+An LED primarily operates through spontaneous emission, generating incoherent light whose
+output power increases approximately linearly with injection current. In contrast, a semiconductor LASER utilizes carrier injection into an active region, stimulated emission, and optical
+feedback from a Fabry-Perot cavity to produce coherent laser light above a specific threshold
+current.
+The simplified LED optical output power model is expressed as:
+PLED = ηext
+
+hν
+I
+q
+
+(1)
+
+For a semiconductor LASER, the stimulated optical output power above threshold is modeled
+as:
+hν
+PLASER = ηd
+max(I − Ith , 0)
+(2)
+q
+where ηext is the LED external quantum efficiency, ηd is the LASER external differential quantum efficiency, h is Planck’s constant, ν is the optical frequency (c/λ), q is the electron charge,
+and Ith is the threshold current.
+The electrical-to-optical wall-plug efficiency (ηW P ) is defined as:
+ηW P =
+
+Poptical
+VI
+
+(3)
+
+The normalized small-signal frequency modulation responses are governed by first-order lowpass and second-order resonance dynamics respectively:
+1
+1 + jf /fc
+fr2
+HLASER (f ) = 2
+fr − f 2 + j2ζfr f
+HLED (f ) =
+
+(4)
+(5)
+
+where fc is the LED cutoff frequency, fr is the LASER relaxation-resonance frequency, and ζ
+is the damping ratio.
+
+1.3
+
+Simulation Parameters
+
+1.4
+
+Procedure
+
+1. Initialize fundamental physical constants (h, c, q) and set the optical operating wavelength
+to 850 nm.
+3
+
+Parameter
+
+Baseline value
+
+Planck’s constant (h)
+Speed of light (c)
+Electron charge (q)
+Optical wavelength (λ)
+Injection current range (I)
+LED optical conversion factor (ηLED )
+Laser optical conversion factor (ηLaser )
+Laser threshold current (Ith )
+LED / Laser forward voltages
+LED cutoff frequency (fc )
+Laser resonance frequency (fr )
+
+6.626 × 10−34 J · s
+3 × 108 m/s
+1.602 × 10−19 C
+850 nm
+0.1 mA to 100 mA (1000 points)
+0.03
+0.40
+25 mA
+1.8 V / 2.0 V
+50 MHz
+3 GHz (ζ = 0.45)
+
+2. Create an injection current vector spanning from 0.1 mA to 100 mA with 1000 sample
+points, avoiding exact zero current to prevent division-by-zero errors in efficiency calculations.
+3. Compute the optical output power for the LED and semiconductor LASER using linear
+and threshold-limited equations.
+4. Evaluate wall-plug efficiency across the current sweep using device operating voltages.
+5. Construct a logarithmic frequency vector from 1 MHz to 31.6 GHz to compute the normalized small-signal modulation responses (HLED and HLASER ).
+6. Plot power-current (P − I) characteristics, wall-plug efficiency, and modulation frequency
+response curves.
+
+1.5
+
+Results and Generated Figures
+
+Physical Interpretation: The LED optical power exhibits a direct linear increase with injection current from the origin. Conversely, the LASER optical power remains zero below the
+threshold current (Ith = 25 mA) and rises sharply with a much higher slope efficiency above
+threshold. The LED demonstrates a standard first-order low-pass frequency response, while the
+LASER features a distinct resonant peak near its relaxation frequency (fr = 3 GHz).
+
+1.6
+
+Parameter Comparisons and Model Limitations
+
+Parameter Changes: Varying Ith to 15, 25, and 35 mA shifts the onset of stimulated emission
+on the P-I curves. Changing the damping factor ζ directly controls the peaking behavior of the
+LASER resonance curve.
+Model Limitations: Below-threshold spontaneous emission and thermal rollover effects at
+high operating currents are excluded from this simplified model.
+
+1.7
+
+Complete MATLAB Code
+
+clear ;
+clc ;
+close all ;
+%% =========================================================
+% OPTICAL SOURCES : LED vs LASER
+% Power - Current , Efficiency and Modulation Response
+
+4
+
+Figure 1: Power-Current Characteristics, Wall-Plug Efficiency, and Small-Signal Modulation
+Response for LED and LASER.
+% ==========================================================
+% % Physical Constants
+h = 6.626 e -34;
+c = 3 e8 ;
+q = 1.602 e -19;
+
+% Planck constant ( J . s )
+% Speed of light ( m / s )
+% Electron charge ( C )
+
+lambda = 850 e -9;
+
+% Wavelength ( m )
+
+% Optical frequency
+nu = c / lambda ;
+
+%% =========================================================
+% INJECTION CURRENT
+% ==========================================================
+% Avoid I = 0 in efficiency calculation
+I = linspace (0.1 e -3 ,100 e -3 ,1000) ;
+
+%% =========================================================
+% DEVICE PARAMETERS
+% ==========================================================
+etaLED = 0.03;
+
+% LED optical conversion factor
+
+etaLaser = 0.40;
+
+% Laser optical conversion factor
+
+Ith = 25 e -3;
+
+% Laser threshold current ( A )
+
+5
+
+VLED = 1.8;
+
+% LED forward voltage ( V )
+
+VLaser = 2.0;
+
+% Laser voltage ( V )
+
+%% =========================================================
+% OPTICAL OUTPUT POWER
+% ==========================================================
+% LED optical output power
+PLED = etaLED * ( h * nu / q ) .* I ;
+% Laser optical output power
+% Laser produces significant output above threshold current
+PLaser = etaLaser * ( h * nu / q ) .* max (I - Ith ,0) ;
+
+%% =========================================================
+% WALL - PLUG EFFICIENCY
+% ==========================================================
+effLED = 100 * PLED ./ ( VLED * I ) ;
+effLaser = 100 * PLaser ./ ( VLaser * I ) ;
+
+%% =========================================================
+% SMALL - SIGNAL MODULATION RESPONSE
+% ==========================================================
+% Frequency range
+f = logspace (6 ,10.5 ,1500) ;
+% LED bandwidth
+fc = 50 e6 ;
+% Laser relaxation frequency
+fr = 3 e9 ;
+% Damping factor
+zeta = 0.45;
+
+% % LED response
+HLED = 1 ./ (1 + 1 j * f / fc ) ;
+
+% % LASER response
+HLaser = ...
+fr ^2 ./ ...
+( fr ^2 - f .^2 + 1 j *2* zeta * fr .* f ) ;
+
+%% =========================================================
+% PLOTS
+% ==========================================================
+
+6
+
+figure ( ’ Color ’ , ’w ’) ;
+
+% % 1. Power - Current Characteristics
+subplot (2 ,2 ,1) ;
+plot ( I *1 e3 ,...
+PLED *1 e3 ,...
+’b ’ , ’ LineWidth ’ ,1.6) ;
+hold on ;
+plot ( I *1 e3 ,...
+PLaser *1 e3 ,...
+’r ’ , ’ LineWidth ’ ,1.6) ;
+xlabel ( ’ Current ( mA ) ’) ;
+ylabel ( ’ Optical Power ( mW ) ’) ;
+legend ( ’ LED ’ , ’ LASER ’ ,...
+’ Location ’ , ’ northwest ’) ;
+title ( ’ Power - Current Characteristics ’) ;
+grid on ;
+
+% % 2. Electrical - to - Optical Efficiency
+subplot (2 ,2 ,2) ;
+plot ( I *1 e3 ,...
+effLED ,...
+’b ’ , ’ LineWidth ’ ,1.6) ;
+hold on ;
+plot ( I *1 e3 ,...
+effLaser ,...
+’r ’ , ’ LineWidth ’ ,1.6) ;
+xlabel ( ’ Current ( mA ) ’) ;
+ylabel ( ’ Wall - Plug Efficiency (%) ’) ;
+legend ( ’ LED ’ , ’ LASER ’ ,...
+’ Location ’ , ’ northwest ’) ;
+title ( ’ Electrical - to - Optical Efficiency ’) ;
+grid on ;
+
+% % 3. Small - Signal Modulation Response
+subplot (2 ,2 ,[3 4]) ;
+
+7
+
+semilogx ( f /1 e9 ,...
+20* log10 ( abs ( HLED ) ) ,...
+’b ’ , ’ LineWidth ’ ,1.6) ;
+hold on ;
+semilogx ( f /1 e9 ,...
+20* log10 ( abs ( HLaser ) ) ,...
+’r ’ , ’ LineWidth ’ ,1.6) ;
+xlabel ( ’ Modulation Frequency ( GHz ) ’) ;
+ylabel ( ’ Normalized Response ( dB ) ’) ;
+legend ( ’ LED ’ , ’ LASER ’ ,...
+’ Location ’ , ’ southwest ’) ;
+title ( ’ Small - Signal Modulation Response ’) ;
+grid on ;
+
+%% =========================================================
+% DISPLAY RESULTS
+% ==========================================================
+fprintf ( ’\ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ LED vs LASER RESULTS \ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ Wavelength
+lambda *1 e9 ) ;
+
+= %.0 f nm \ n ’ ,...
+
+fprintf ( ’ Optical frequency
+nu ) ;
+
+= %.3 e Hz \ n ’ ,...
+
+fprintf ( ’\ n ’) ;
+fprintf ( ’ LASER threshold current
+Ith *1 e3 ) ;
+
+= %.1 f mA \ n ’ ,...
+
+fprintf ( ’ LASER slope efficiency
+etaLaser * h * nu / q ) ;
+
+= %.3 f W / A \ n ’ ,...
+
+fprintf ( ’ LED conversion factor
+etaLED ) ;
+
+= %.3 f \ n ’ ,...
+
+fprintf ( ’ LASER conversion factor
+etaLaser ) ;
+
+= %.3 f \ n ’ ,...
+
+fprintf ( ’\ nSimulation completed successfully .\ n ’) ;
+
+8
+
+2
+
+Experiment : Optical Modulation Using MZM and EAM
+
+2.1
+
+Objectives
+
+• Observe and analyze the static transfer characteristic curve of a Mach-Zehnder Modulator
+(MZM).
+• Understand voltage-dependent optical absorption mechanisms in an Electro-Absorption
+Modulator (EAM).
+• Compare the time-domain optical outputs and calculate extinction ratios for both external
+modulators.
+
+2.2
+
+Theory and Relevant Equations
+
+A Mach-Zehnder Modulator (MZM) splits continuous-wave input light into two optical waveguide arms. By applying a modulating voltage, the relative optical phase between the arms
+is varied, producing constructive or destructive interference at the output coupler to control
+optical intensity. The ideal MZM transfer function is modeled as:
+(︃
+)︃
+πV
+2
+Pout = Pin cos
+(6)
+2Vπ
+where V is the effective modulation voltage (including bias) and Vπ is the half-wave switching
+voltage.
+An Electro-Absorption Modulator (EAM) modulates light intensity by altering semiconductor
+bandgap absorption through an applied reverse-bias voltage (VR ). Using Beer-Lambert’s model:
+Pout = Pin e−α(VR )L
+
+(7)
+
+where α(VR ) = α0 + kα VR , α0 is baseline absorption, kα is the electro-absorption coefficient,
+and L is active modulator length. The extinction ratio (ER) in dB is defined as:
+(︃ )︃
+P1
+ER = 10 log10
+(8)
+P0
+
+2.3
+
+Simulation Parameters
+Parameter
+
+Baseline value
+
+Input continuous-wave power (Pin )
+MZM half-wave voltage (Vπ )
+MZM voltage sweep range
+EAM reverse-bias sweep (VR )
+EAM active length (L)
+EAM baseline absorption (α0 )
+EAM coefficient (kα )
+Input bit sequence
+Bit rate (Rb ) / Samples per bit (sps)
+
+10 mW
+4V
+0 to 8 V (1000 points)
+0 to 4 V (1000 points)
+200 µm
+1000 m−1
+4000 (m · V)−1
+[1 0 1 1 0 0 1 0 1 0]
+1 Gb/s / 100
+
+9
+
+2.4
+
+Procedure
+
+1. Set up input CW power (Pin = 10 mW) and MZM half-wave voltage (Vπ = 4 V).
+2. Compute MZM static optical transmission across a voltage vector from 0 to 2Vπ .
+3. Configure EAM parameters (L, α0 , kα ) and evaluate static exponential transmission across
+a reverse-bias voltage vector from 0 to 4 V.
+4. Generate a 10-bit unipolar NRZ digital data sequence at 1 Gb/s with oversampling (‘sps
+= 100‘).
+5. Map logical bits to respective electrical drive voltages for MZM and EAM, simulate timedomain modulated optical outputs, and calculate extinction ratios.
+
+2.5
+
+Results and Generated Figures
+
+Physical Interpretation: The MZM transfer characteristic follows a periodic cosine-squared
+interference pattern, whereas the EAM exhibits a monotonically decreasing exponential absorption curve under increasing reverse bias. The selected drive conditions yield high extinction
+ratios for both modulators.
+
+Figure 2: MZM Transfer Characteristic, EAM Transfer Characteristic, Input NRZ Data, and
+Modulated Optical Output.
+
+2.6
+
+Parameter Comparisons and Model Limitations
+
+Parameter Changes: Adjusting MZM drive voltage amplitudes alters the modulation depth
+and resulting extinction ratio. Increasing the EAM active length (L) enhances absorption,
+decreasing output power levels.
+Limitations: This is an idealized static comparison; high-frequency parasitic bandwidth limits,
+optical insertion losses, semiconductor chirp, and fabrication variations are excluded.
+
+10
+
+2.7
+
+Complete MATLAB Code
+
+clear ;
+clc ;
+close all ;
+%% =========================================================
+% MZM AND EAM OPTICAL MODULATORS
+% Static Transfer Characteristics and NRZ Modulation
+% ==========================================================
+% % Basic Parameters
+Pin = 10 e -3;
+
+% Input optical power ( W )
+
+Vpi = 4;
+
+% MZM half - wave voltage ( V )
+
+%% =========================================================
+% PART 1: STATIC MZM CHARACTERISTIC
+% ==========================================================
+V = linspace (0 ,2* Vpi ,1000) ;
+% MZM output power
+PMZM = Pin * cos ( pi * V /(2* Vpi ) ) .^2;
+
+%% =========================================================
+% PART 2: STATIC EAM CHARACTERISTIC
+% ==========================================================
+VR = linspace (0 ,4 ,1000) ;
+% EAM parameters
+L = 200 e -6;
+
+% Device length ( m )
+
+alpha0 = 1000;
+
+% Base absorption coefficient (1/ m )
+
+kAlpha = 4000;
+
+% Voltage - dependent coefficient
+
+% EAM output power
+PEAM = Pin * exp ( -( alpha0 + kAlpha * VR ) * L ) ;
+
+%% =========================================================
+% PART 3: UNIPOLAR NRZ INPUT
+% ==========================================================
+bits = [1 0 1 1 0 0 1 0 1 0];
+Rb = 1 e9 ;
+
+% Bit rate = 1 Gb / s
+
+sps = 100;
+
+% Samples per bit
+
+% NRZ waveform
+data = kron ( bits , ones (1 , sps ) ) ;
+
+11
+
+% % Time axis
+Tb = 1/ Rb ;
+dt = Tb / sps ;
+t = (0: length ( data ) -1) * dt ;
+
+%% =========================================================
+% PART 4: MZM OPTICAL MODULATION
+% ==========================================================
+% Map digital data to MZM voltage
+%
+% Bit 1 -> 0 V
+% Bit 0 -> Vpi
+VMZM = Vpi *(1 - data ) ;
+% MZM output optical power
+outMZM = Pin * ...
+cos ( pi * VMZM /(2* Vpi ) ) .^2;
+
+%% =========================================================
+% PART 5: EAM OPTICAL MODULATION
+% ==========================================================
+% Map digital data to reverse bias
+%
+% Bit 0 -> 0 V
+% Bit 1 -> 4 V
+VEAM = 4* data ;
+% EAM output optical power
+outEAM = Pin * ...
+exp ( -( alpha0 + kAlpha * VEAM ) * L ) ;
+
+%% =========================================================
+% PART 6: EXTINCTION RATIO
+% ==========================================================
+% MZM maximum and minimum output powers
+PmaxMZM = max ( outMZM ) ;
+PminMZM = min ( outMZM ) ;
+% EAM maximum and minimum output powers
+PmaxEAM = max ( outEAM ) ;
+PminEAM = min ( outEAM ) ;
+
+% Extinction ratio
+ERm = 10* log10 ( PmaxMZM / PminMZM ) ;
+
+12
+
+ERe = 10* log10 ( PmaxEAM / PminEAM ) ;
+
+%% =========================================================
+% PART 7: PLOTS
+% ==========================================================
+figure ( ’ Color ’ , ’w ’) ;
+
+% % MZM transfer characteristic
+subplot (2 ,2 ,1) ;
+plot (V , PMZM *1 e3 ,...
+’ LineWidth ’ ,1.5) ;
+xlabel ( ’ MZM Voltage ( V ) ’) ;
+ylabel ( ’ Output Power ( mW ) ’) ;
+title ( ’ MZM Transfer Characteristic ’) ;
+grid on ;
+
+% % EAM transfer characteristic
+subplot (2 ,2 ,2) ;
+plot ( VR , PEAM *1 e3 ,...
+’ LineWidth ’ ,1.5) ;
+xlabel ( ’ Reverse - Bias Magnitude ( V ) ’) ;
+ylabel ( ’ Power ( mW ) ’) ;
+title ( ’ EAM Transfer Characteristic ’) ;
+grid on ;
+
+% % Input NRZ data
+subplot (2 ,2 ,3) ;
+stairs ( t *1 e9 , data ,...
+’k ’ , ’ LineWidth ’ ,1.3) ;
+xlabel ( ’ Time ( ns ) ’) ;
+ylabel ( ’ Bit Level ’) ;
+title ( ’ Input NRZ Data ’) ;
+ylim ([ -0.2 1.2]) ;
+grid on ;
+
+% % Modulated optical output
+
+13
+
+subplot (2 ,2 ,4) ;
+plot ( t *1 e9 ,...
+outMZM *1 e3 ,...
+’b ’ , ’ LineWidth ’ ,1.3) ;
+hold on ;
+plot ( t *1 e9 ,...
+outEAM *1 e3 ,...
+’r - - ’ , ’ LineWidth ’ ,1.3) ;
+xlabel ( ’ Time ( ns ) ’) ;
+ylabel ( ’ Power ( mW ) ’) ;
+legend ( ’ MZM ’ , ’ EAM ’) ;
+title ( ’ Modulated Optical Output ’) ;
+grid on ;
+
+%% =========================================================
+% DISPLAY RESULTS
+% ==========================================================
+fprintf ( ’\ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ MZM AND EAM MODULATOR RESULTS \ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ Input optical power = %.2 f mW \ n ’ ,...
+Pin *1 e3 ) ;
+fprintf ( ’ MZM Vpi
+Vpi ) ;
+
+= %.2 f V \ n ’ ,...
+
+fprintf ( ’ EAM device length
+L *1 e6 ) ;
+
+= %.2 f um \ n ’ ,...
+
+fprintf ( ’\ n ’) ;
+fprintf ( ’ MZM maximum power
+PmaxMZM *1 e3 ) ;
+
+= %.4 f mW \ n ’ ,...
+
+fprintf ( ’ MZM minimum power
+PminMZM *1 e3 ) ;
+
+= %.4 e mW \ n ’ ,...
+
+fprintf ( ’ MZM extinction ratio = %.2 f dB \ n ’ ,...
+ERm ) ;
+fprintf ( ’\ n ’) ;
+fprintf ( ’ EAM maximum power
+PmaxEAM *1 e3 ) ;
+
+= %.4 f mW \ n ’ ,...
+
+fprintf ( ’ EAM minimum power
+
+= %.4 e mW \ n ’ ,...
+
+14
+
+PminEAM *1 e3 ) ;
+fprintf ( ’ EAM extinction ratio = %.2 f dB \ n ’ ,...
+ERe ) ;
+fprintf ( ’\ n ’) ;
+fprintf ( ’ Simulation completed successfully .\ n ’) ;
+
+15
+
+3
+
+Experiment : Noise, SNR, Q-Factor, and BER of PIN and
+APD Receivers
+
+3.1
+
+Objectives
+
+• Calculate photodiode responsivity and signal photocurrent.
+• Analyze receiver shot noise and thermal noise variance.
+• Compare PIN and Avalanche Photodiode (APD) receiver sensitivity, Q-factor, and Bit
+Error Rate (BER).
+
+3.2
+
+Theory and Relevant Equations
+
+Photodiode responsivity (R) is given by:
+R=η
+
+qλ
+hc
+
+(9)
+
+For a PIN photodiode, photocurrent is Ip = RP . Thermal noise variance introduced by load
+resistance RL at absolute temperature T within bandwidth B is:
+σT2 =
+
+4kB T B
+RL
+
+(10)
+
+PIN noise variances for bit 0 and bit 1 are:
+2
+2
+σ0,P
+IN = 2qId B + σT ,
+
+2
+2
+σ1,P
+IN = 2q(RP1 + Id )B + σT
+
+(11)
+
+For an APD with internal multiplication gain M and ionization ratio kA , the excess-noise factor
+F (M ) is:
+(︃
+)︃
+1
+F (M ) = kA M + (1 − kA ) 2 −
+(12)
+M
+The APD noise variances and OOK link performance metrics are modeled as:
+2
+2
+2
+σ0,AP
+D = 2qM F (M )Id B + σT ,
+
+Q=
+
+3.3
+
+µ1 − µ 0
+,
+σ1 + σ 0
+
+2
+2
+2
+σ1,AP
+D = 2qM F (M )(RP1 + Id )B + σT
+(︃
+)︃
+1
+Q
+BER = erfc √
+2
+2
+
+(13)
+(14)
+
+Simulation Parameters
+
+Parameter
+
+Baseline value
+
+Wavelength (λ)
+Quantum efficiency (η)
+Noise-equivalent bandwidth (B)
+Absolute temperature (T )
+Load resistance (RL )
+Dark current (Id)
+Bit-1 optical power sweep (P1,dBm )
+APD multiplication gain (M ) / Ionization ratio (kA )
+
+1550 nm
+0.80
+1 GHz
+300 K
+1000 Ω
+5 nA
+−50 to − 15 dBm (step 0.2 dB)
+10 / 0.30
+
+16
+
+3.4
+
+Procedure
+
+1. Define physical constants (q, h, c, kB ) and optical receiver parameters (λ, η, B, T, RL , Id).
+2. Calculate detector responsivity R and thermal noise variance σT2 .
+3. Compute APD excess noise factor F (M ) using gain M = 10 and ionization ratio kA = 0.30.
+4. Sweep received bit-1 optical power from −50 dBm to −15 dBm and evaluate signal current, shot noise, and thermal noise for both PIN and APD receivers.
+5. Calculate bit-1 SNR, decision Q-factor, and Bit Error Rate (BER), then plot performance
+curves to evaluate receiver sensitivity at 10−9 BER.
+
+3.5
+
+Results and Generated Figures
+
+Physical Interpretation: Higher received optical power increases signal photocurrent and Qfactor while suppressing BER. Internal APD multiplication boosts signal levels above thermal
+noise in low-power regimes, yielding superior sensitivity (e.g., −28.2 dBm vs −21.4 dBm at
+10−9 BER), though excessive multiplication gain increases excess noise.
+
+Figure 3: SNR, Q-factor, and BER Performance Comparison Curves for PIN and APD Receivers.
+
+3.6
+
+Parameter Comparisons and Model Limitations
+
+Parameter Changes: Simulating with M = 1, 5, 10, and 20 highlights the optimal balance
+between avalanche gain enhancement and excess noise penalty.
+Limitations: The model assumes all dark current is multiplied bulk dark current and employs
+equal-tail Gaussian threshold approximations.
+
+3.7
+
+Complete MATLAB Code
+
+17
+
+clear ;
+clc ;
+close all ;
+%% =========================================================
+% OPTICAL COMMUNICATIONS LABORATORY
+% PIN and APD Receivers
+% Noise , SNR , Q - factor and BER
+% ==========================================================
+% % Fundamental Constants
+q
+h
+c
+kB
+
+=
+=
+=
+=
+
+1.602 e -19;
+6.626 e -34;
+3 e8 ;
+1.381 e -23;
+
+%
+%
+%
+%
+
+Electron charge ( C )
+Planck constant ( J . s )
+Speed of light ( m / s )
+Boltzmann constant ( J / K )
+
+%% =========================================================
+% RECEIVER PARAMETERS
+% ==========================================================
+lambda = 1550 e -9;
+
+% Wavelength ( m )
+
+eta = 0.80;
+
+% Quantum efficiency
+
+% Photodetector responsivity
+R = eta * q * lambda /( h * c ) ;
+B = 1 e9 ;
+
+% Noise - equivalent bandwidth ( Hz )
+
+T = 300;
+
+% Temperature ( K )
+
+RL = 1000;
+
+% Load resistance ( Ohm )
+
+Id = 5e -9;
+
+% Dark current ( A )
+
+%% =========================================================
+% RECEIVED OPTICAL POWER
+% ==========================================================
+% Optical power corresponding to OOK bit 1
+P1dBm = -50:0.2: -15;
+% Convert dBm to Watt
+P1 = 1e -3 * 10.^( P1dBm /10) ;
+
+%% =========================================================
+% THERMAL NOISE VARIANCE
+% ==========================================================
+thermalVar = ...
+4* kB * T * B / RL ;
+
+%% =========================================================
+
+18
+
+% PIN RECEIVER
+% ==========================================================
+% Signal current for bit 1
+signalPIN = R * P1 ;
+% Noise standard deviation for bit 0
+sigma0PIN = sqrt ( ...
+2* q * Id * B + thermalVar ) ;
+% Noise standard deviation for bit 1
+sigma1PIN = sqrt ( ...
+2* q *( R * P1 + Id ) * B + thermalVar ) ;
+% Q - factor
+QPIN = ...
+signalPIN ./ ( sigma1PIN + sigma0PIN ) ;
+% BER
+BERPIN = ...
+0.5 * erfc ( QPIN / sqrt (2) ) ;
+
+%% =========================================================
+% APD RECEIVER
+% ==========================================================
+M = 10;
+
+% APD multiplication gain
+
+kA = 0.30;
+
+% Ionization coefficient ratio
+
+% APD excess noise factor
+F = kA * M + (1 - kA ) *(2 -1/ M ) ;
+
+% APD signal current
+signalAPD = M * R * P1 ;
+
+% Noise for bit 0
+sigma0APD = sqrt ( ...
+2* q * M ^2* F * Id * B + thermalVar ) ;
+
+% Noise for bit 1
+sigma1APD = sqrt ( ...
+2* q * M ^2* F *( R * P1 + Id ) * B + thermalVar ) ;
+
+% Q - factor
+QAPD = ...
+signalAPD ./ ( sigma1APD + sigma0APD ) ;
+
+% BER
+BERAPD = ...
+0.5 * erfc ( QAPD / sqrt (2) ) ;
+
+19
+
+%% =========================================================
+% SNR CALCULATION
+% ==========================================================
+% Defined as :
+% bit -1 signal - current squared / bit -1 noise variance
+SNRPIN = ...
+signalPIN .^2 ./ sigma1PIN .^2;
+SNRAPD = ...
+signalAPD .^2 ./ sigma1APD .^2;
+
+%% =========================================================
+% PLOT RESULTS
+% ==========================================================
+figure ( ’ Color ’ , ’w ’) ;
+
+% % SNR
+subplot (3 ,1 ,1) ;
+plot ( P1dBm ,...
+10* log10 ( SNRPIN ) ,...
+’b ’ , ’ LineWidth ’ ,1.4) ;
+hold on ;
+plot ( P1dBm ,...
+10* log10 ( SNRAPD ) ,...
+’r ’ , ’ LineWidth ’ ,1.4) ;
+ylabel ( ’ SNR_1 ( dB ) ’) ;
+legend ( ’ PIN ’ , ’ APD ’) ;
+title ( ’ SNR Comparison ’) ;
+grid on ;
+
+% % Q - factor
+subplot (3 ,1 ,2) ;
+plot ( P1dBm ,...
+QPIN ,...
+’b ’ , ’ LineWidth ’ ,1.4) ;
+hold on ;
+plot ( P1dBm ,...
+QAPD ,...
+’r ’ , ’ LineWidth ’ ,1.4) ;
+
+20
+
+ylabel ( ’Q - factor ’) ;
+legend ( ’ PIN ’ , ’ APD ’) ;
+title ( ’Q - factor Comparison ’) ;
+grid on ;
+
+% % BER
+subplot (3 ,1 ,3) ;
+semilogy ( P1dBm ,...
+max ( BERPIN ,1 e -20) ,...
+’b ’ , ’ LineWidth ’ ,1.4) ;
+hold on ;
+semilogy ( P1dBm ,...
+max ( BERAPD ,1 e -20) ,...
+’r ’ , ’ LineWidth ’ ,1.4) ;
+xlabel ( ’ Received Bit -1 Optical Power ( dBm ) ’) ;
+ylabel ( ’ BER ’) ;
+legend ( ’ PIN ’ , ’ APD ’) ;
+title ( ’ BER Comparison ’) ;
+ylim ([1 e -12 1]) ;
+grid on ;
+
+%% =========================================================
+% DISPLAY BASIC PARAMETERS
+% ==========================================================
+fprintf ( ’\ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ PIN AND APD RECEIVER RESULTS \ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ Wavelength
+lambda *1 e9 ) ;
+
+= %.0 f nm \ n ’ ,...
+
+fprintf ( ’ Quantum efficiency
+eta ) ;
+
+= %.2 f \ n ’ ,...
+
+fprintf ( ’ Responsivity
+R);
+
+= %.3 f A / W \ n ’ ,...
+
+fprintf ( ’ Bandwidth
+B /1 e9 ) ;
+
+= %.2 f GHz \ n ’ ,...
+
+21
+
+fprintf ( ’ Temperature
+T);
+
+= %.0 f K \ n ’ ,...
+
+fprintf ( ’ Load resistance
+RL ) ;
+
+= %.0 f Ohm \ n ’ ,...
+
+fprintf ( ’ Dark current
+Id ) ;
+
+= %.2 e A \ n ’ ,...
+
+fprintf ( ’\ n ’) ;
+fprintf ( ’ APD multiplication gain
+M);
+
+= %.1 f \ n ’ ,...
+
+fprintf ( ’ APD excess - noise factor
+F);
+
+= %.2 f \ n ’ ,...
+
+%% =========================================================
+% SENSITIVITY AT BER = 1e -9
+% ==========================================================
+targetBER = 1e -9;
+idxPIN = find ( BERPIN <= targetBER ,1) ;
+idxAPD = find ( BERAPD <= targetBER ,1) ;
+
+fprintf ( ’\ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ RECEIVER SENSITIVITY \ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+if ~ isempty ( idxPIN )
+fprintf ( ’ PIN sensitivity at BER 1e -9 = %.1 f dBm \ n ’ ,...
+P1dBm ( idxPIN ) ) ;
+else
+fprintf ( ’ PIN does not reach BER 1e -9 in the selected power range .\ n
+’) ;
+end
+if ~ isempty ( idxAPD )
+fprintf ( ’ APD sensitivity at BER 1e -9 = %.1 f dBm \ n ’ ,...
+P1dBm ( idxAPD ) ) ;
+else
+fprintf ( ’ APD does not reach BER 1e -9 in the selected power range .\ n
+’) ;
+end
+fprintf ( ’\ nSimulation completed successfully .\ n ’) ;
+
+22
+
+4
+
+Experiment : Power Budget and Rise-Time Budget of a FiberOptic Link
+
+4.1
+
+Objectives
+
+• Calculate total passive link loss and received optical power.
+• Determine whether a fiber link successfully satisfies its power budget margin.
+• Estimate system rise time and maximum NRZ bit rate capability from the rise-time budget.
+
+4.2
+
+Theory and Relevant Equations
+
+Total passive link loss accounts for fiber attenuation, connector insertion losses, and splice losses:
+Ltotal = αL + Nc Lc + Ns Ls
+
+(15)
+
+Received optical power is Pr = Pt − Ltotal . The power budget requires that received power
+exceeds receiver sensitivity plus a design margin:
+Pr ≥ Psens + Mdesign
+
+(16)
+
+The aggregate system rise time (tsys ) combines transmitter, receiver, and dispersion rise times
+via root-sum-square addition:
+√︂
+tsys = t2tx + t2rx + t2chrom + t2modal
+(17)
+where chromatic dispersion rise time for a Gaussian source is tchrom ≈ 2.563|D|Lσλ . The
+standard NRZ transmission bandwidth criterion is:
+tsys ≤
+
+4.3
+
+4.4
+
+0.7
+Rb
+
+(18)
+
+Simulation Parameters
+Parameter
+
+Baseline value
+
+Transmitter output power (Ptx )
+Receiver sensitivity (Psens )
+Design margin (Mdesign )
+Fiber attenuation coefficient (α)
+Link distance (L)
+Connectors (Nc , Lc ) / Splices (Ns , Ls )
+Transmitter / Receiver rise times
+Chromatic dispersion (D) / Width (σλ )
+Transmission bit rate (Rb )
+
+0 dBm
+−24 dBm
+3 dB
+0.25 dB/km
+50 km
+2 (0.5 dB) / 10 (0.1 dB)
+120 ps / 150 ps
+17 ps/(nm · km) / 0.10 nm
+2.5 Gb/s
+
+Procedure
+
+1. Set up baseline link parameters including transmitter power, receiver sensitivity, and
+component counts.
+2. Compute total passive link loss and received optical power at 50 km, evaluating the remaining power margin.
+23
+
+3. Calculate chromatic dispersion rise time (tchrom ) and aggregate system rise time (tsys ).
+4. Compare system rise time with the allowable limit (0.7/Rb ) and evaluate link feasibility.
+
+4.5
+
+Results and Generated Figures
+
+Physical Interpretation: The link passes the power budget with a positive margin (6.5 dB
+remaining), but fails the rise-time budget because system rise time (≈ 290.41 ps) exceeds the allowable limit (280 ps) at 2.5 Gb/s. This proves that optical power sufficiency does not guarantee
+high-speed operation if dispersion limits bandwidth.
+
+4.6
+
+Parameter Comparisons and Model Limitations
+
+Parameter Changes: Reducing the transmitter RMS spectral width (σλ ) by half cuts chromatic dispersion rise time, allowing the link to pass the rise-time budget. Increasing transmitter
+power extends the power-limited maximum link length.
+Limitations: Fiber nonlinearities and polarization mode dispersion are excluded.
+
+4.7
+
+Complete MATLAB Code
+
+clear ;
+clc ;
+close all ;
+%% =========================================================
+% OPTICAL COMMUNICATION LINK BUDGET
+% Power Budget + Rise - Time Budget
+% ==========================================================
+% % PART 1: POWER BUDGET
+% Transmitter power
+Ptx = 0;
+
+% dBm
+
+% Receiver sensitivity
+Psens = -24;
+
+% dBm
+
+% Required design margin
+designMargin = 3;
+
+% dB
+
+% Fiber attenuation
+alpha = 0.25;
+
+% dB / km
+
+% Fiber length
+L = 50;
+
+% km
+
+% Connector parameters
+Nc = 2;
+Lc = 0.5;
+
+% Number of connectors
+% Loss per connector ( dB )
+
+% Splice parameters
+Ns = 10;
+Ls = 0.1;
+
+% Number of splices
+% Loss per splice ( dB )
+
+% % Calculate Fixed Loss
+
+24
+
+fixedLoss = Nc * Lc + Ns * Ls ;
+
+% % Calculate Total Fiber Loss
+fiberLoss = alpha * L ;
+
+% % Calculate Total Passive Loss
+totalLoss = fiberLoss + fixedLoss ;
+
+% % Calculate Received Power
+Prx = Ptx - totalLoss ;
+
+% % Calculate Remaining Design Margin
+remainingMargin = ...
+Prx - Psens - designMargin ;
+
+% % Maximum Power - Limited Fiber Length
+LmaxPower = ...
+( Ptx - Psens - designMargin - fixedLoss ) / alpha ;
+
+%% =========================================================
+% PART 2: RISE - TIME BUDGET
+% ==========================================================
+% Transmitter rise time
+ttx = 120;
+
+% ps
+
+% Receiver rise time
+trx = 150;
+
+% ps
+
+% Chromatic dispersion coefficient
+D = 17;
+% ps /( nm . km )
+% RMS spectral width
+sigmaLambda = 0.10;
+
+% nm
+
+% Modal rise time
+% For single - mode fiber , modal dispersion is approximately zero
+tmodal = 0;
+% ps
+
+% % Chromatic Dispersion Rise Time
+tchrom = ...
+2.563 * abs ( D ) * L * sigmaLambda ;
+
+% % Total System Rise Time
+
+25
+
+tsys = sqrt ( ...
+ttx ^2 + ...
+trx ^2 + ...
+tchrom ^2 + ...
+tmodal ^2 ) ;
+
+%% =========================================================
+% PART 3: ALLOWED RISE TIME
+% ==========================================================
+% Target bit rate
+Rb = 2.5 e9 ;
+
+% bit / s
+
+% NRZ rise - time criterion
+allowedRise = ...
+(0.7/ Rb ) * 1 e12 ;
+
+% % Maximum NRZ Bit Rate
+RbMax = ...
+0.7 / ( tsys *1 e -12) ;
+
+%% =========================================================
+% DISPLAY RESULTS
+% ==========================================================
+fprintf ( ’\ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ OPTICAL COMMUNICATION LINK BUDGET RESULTS \ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’\n - - - POWER BUDGET - - -\ n ’) ;
+fprintf ( ’ Transmitter power
+fprintf ( ’ Fiber loss
+fprintf ( ’ Connector loss
+fprintf ( ’ Splice loss
+fprintf ( ’ Total passive loss
+fprintf ( ’ Received power
+fprintf ( ’ Receiver sensitivity
+fprintf ( ’ Remaining design margin
+fprintf ( ’ Power - limited length
+
+=
+=
+=
+=
+=
+=
+=
+=
+=
+
+%.2 f
+%.2 f
+%.2 f
+%.2 f
+%.2 f
+%.2 f
+%.2 f
+%.2 f
+%.2 f
+
+dBm \ n ’ , Ptx ) ;
+dB \ n ’ , fiberLoss ) ;
+dB \ n ’ , Nc * Lc ) ;
+dB \ n ’ , Ns * Ls ) ;
+dB \ n ’ , totalLoss ) ;
+dBm \ n ’ , Prx ) ;
+dBm \ n ’ , Psens ) ;
+dB \ n ’ , remainingMargin ) ;
+km \ n ’ , LmaxPower ) ;
+
+fprintf ( ’\n - - - RISE - TIME BUDGET - - -\ n ’) ;
+fprintf ( ’ Transmitter rise time
+fprintf ( ’ Receiver rise time
+fprintf ( ’ Chromatic dispersion time
+fprintf ( ’ Modal rise time
+fprintf ( ’ System rise time
+
+=
+=
+=
+=
+=
+
+fprintf ( ’\ n ’) ;
+fprintf ( ’ Target bit rate
+
+= %.2 f Gb / s \ n ’ , Rb /1 e9 ) ;
+
+26
+
+%.2 f
+%.2 f
+%.2 f
+%.2 f
+%.2 f
+
+ps \ n ’ ,
+ps \ n ’ ,
+ps \ n ’ ,
+ps \ n ’ ,
+ps \ n ’ ,
+
+ttx ) ;
+trx ) ;
+tchrom ) ;
+tmodal ) ;
+tsys ) ;
+
+fprintf ( ’ Allowed rise time
+fprintf ( ’ Maximum NRZ bit rate
+
+= %.2 f ps \ n ’ , allowedRise ) ;
+= %.2 f Gb / s \ n ’ , RbMax /1 e9 ) ;
+
+%% =========================================================
+% LINK FEASIBILITY CHECK
+% =========================================================
+fprintf ( ’\n - - - LINK CHECK - - -\ n ’) ;
+if remainingMargin >= 0
+fprintf ( ’ Power budget : PASS \ n ’) ;
+else
+fprintf ( ’ Power budget : FAIL \ n ’) ;
+end
+if tsys <= allowedRise
+fprintf ( ’ Rise - time budget : PASS \ n ’) ;
+else
+fprintf ( ’ Rise - time budget : FAIL \ n ’) ;
+end
+fprintf ( ’\ nSimulation completed successfully .\ n ’) ;
+
+27
+
+5
+
+Experiment : Line Coding and Eye-Pattern Analysis
+
+5.1
+
+Objectives
+
+• Generate unipolar NRZ, 50% duty-cycle RZ, and Manchester line-coded waveforms.
+• Observe the effects of receiver bandwidth limitations and additive noise.
+• Interpret digital signal quality and intersymbol interference using eye diagrams.
+
+5.2
+
+Theory and Relevant Equations
+
+Line coding conventions determine pulse shapes: unipolar NRZ remains high for the entire bit
+duration, RZ returns to zero at mid-bit, and Manchester guarantees a mid-bit transition for
+clock synchronization. A receiver-equivalent low-pass channel is modeled via a first-order IIR
+filter:
+y[n] = a · y[n − 1] + (1 − a) · x[n]
+(19)
+where filter coefficient a depends on cutoff frequency fc and sampling frequency Fs :
+a = e−2πfc /Fs
+
+(20)
+
+An eye diagram is generated by overlaying successive waveform segments over 2-bit windows.
+
+5.3
+
+5.4
+
+Simulation Parameters
+Parameter
+
+Baseline value
+
+Random seed
+Number of simulated bits (N bits)
+Samples per bit (sps)
+Bit rate (Rb )
+Good / Poor channel cutoffs (fc )
+Receiver noise standard deviations
+
+‘rng(10)‘
+500
+64
+1 Gb/s
+0.8Rb / 0.2Rb
+0.025 (Good) and 0.070 (Poor)
+
+Procedure
+
+1. Generate a pseudo-random bit stream of 500 bits using ‘rng(10)‘.
+2. Construct unipolar NRZ, 50% RZ, and Manchester coded time waveforms.
+3. Filter the NRZ waveform through low-pass IIR filters representing good (0.8Rb ) and poor
+(0.2Rb ) channel bandwidths.
+4. Add zero-mean Gaussian receiver noise to the filtered signals.
+5. Overlay aligned 2-bit windows to construct eye patterns and analyze signal degradation.
+
+5.5
+
+Results and Generated Figures
+
+Physical Interpretation: NRZ signals lack guaranteed transitions during consecutive identical bits, whereas Manchester coding ensures frequent transitions for clock recovery at the cost
+of higher bandwidth. Restricted channel bandwidth slows transition edges, causing intersymbol
+interference (ISI) that closes the eye horizontally, while noise reduces the vertical eye opening.
+
+28
+
+Figure 4: Unipolar NRZ, 50% RZ, and Manchester Time Waveforms.
+
+Figure 5: Eye Diagrams for Wider Bandwidth/Lower Noise and Narrower Bandwidth/Higher
+Noise Channels.
+
+5.6
+
+Parameter Comparisons and Model Limitations
+
+Parameter Changes: Evaluating eye diagrams across cutoff ratios fc /Rb = 0.2, 0.5, and 0.8
+shows how bandwidth constraints affect timing jitter and sampling margins.
+Limitations: The channel is modeled as a simple first-order low-pass filter without advanced
+equalization.
+
+29
+
+5.7
+
+Complete MATLAB Code
+
+clear ;
+clc ;
+close all ;
+rng (10) ;
+%% =========================================================
+% DIGITAL OPTICAL COMMUNICATION
+% Line Coding + Bandwidth Effect + Eye Diagram
+% ==========================================================
+% % Basic Parameters
+Nbits = 500;
+sps = 64;
+Rb = 1 e9 ;
+Fs = Rb * sps ;
+
+% Samples per bit ( must be even )
+% Bit rate = 1 Gbps
+% Sampling frequency
+
+% % Generate Random Bits
+bits = randi ([0 1] , 1 , Nbits ) ;
+%% =========================================================
+% PART 1: LINE CODING
+% ==========================================================
+% Unipolar NRZ
+nrz = kron ( bits , ones (1 , sps ) ) ;
+% 50% Return - to - Zero
+rz = kron ( bits , ...
+[ ones (1 , sps /2) , zeros (1 , sps /2) ]) ;
+% Manchester coding
+manchester = ...
+kron ( bits , [ ones (1 , sps /2) , zeros (1 , sps /2) ]) + ...
+kron (1 - bits , [ zeros (1 , sps /2) , ones (1 , sps /2) ]) ;
+% % Show first 8 bits
+nshow = 8 * sps ;
+tshow = (0: nshow -1) / Fs * 1 e9 ;
+waveforms = [ nrz ; rz ; manchester ];
+names = { ’ Unipolar NRZ ’ , ’ 50% RZ ’ , ’ Manchester ’ };
+% % Plot Line - Coded Waveforms
+figure ( ’ Color ’ , ’w ’) ;
+for k = 1:3
+subplot (3 ,1 , k ) ;
+stairs ( tshow , ...
+
+30
+
+waveforms (k ,1: nshow ) , ...
+’ LineWidth ’ ,1.4) ;
+xlabel ( ’ Time ( ns ) ’) ;
+ylabel ( ’ Level ’) ;
+title ( names { k }) ;
+ylim ([ -0.2 1.2]) ;
+grid on ;
+end
+
+%% =========================================================
+% PART 2: ELECTRICAL CHANNEL BANDWIDTH
+% ==========================================================
+% Good bandwidth
+fcGood = 0.8 * Rb ;
+% Poor bandwidth
+fcPoor = 0.2 * Rb ;
+% First - order low - pass filter coefficients
+aGood = exp ( -2* pi * fcGood / Fs ) ;
+aPoor = exp ( -2* pi * fcPoor / Fs ) ;
+% % Filter NRZ signal
+yGood = filter ( ...
+1 - aGood , ...
+[1 - aGood ] , ...
+nrz ) ;
+yPoor = filter ( ...
+1 - aPoor , ...
+[1 - aPoor ] , ...
+nrz ) ;
+
+%% =========================================================
+% PART 3: ADD RECEIVER NOISE
+% ==========================================================
+% Good channel : lower noise
+yGood = yGood + ...
+0.025 * randn ( size ( yGood ) ) ;
+% Poor channel : higher noise
+yPoor = yPoor + ...
+0.070 * randn ( size ( yPoor ) ) ;
+
+%% =========================================================
+
+31
+
+% PART 4: EYE DIAGRAM
+% ==========================================================
+% Two - bit time window
+eyeTime = (0:2* sps -1) / sps ;
+figure ( ’ Color ’ , ’w ’) ;
+
+% % Good bandwidth eye
+subplot (1 ,2 ,1) ;
+hold on ;
+for b = 20:200
+idx = (b -1) * sps + (1:2* sps ) ;
+plot ( eyeTime , ...
+yGood ( idx ) , ...
+’ LineWidth ’ ,0.5) ;
+end
+xlabel ( ’ Time / T_b ’) ;
+ylabel ( ’ Normalized Voltage ’) ;
+title ( ’ Wider Bandwidth , Lower Noise ’) ;
+ylim ([ -0.3 1.3]) ;
+grid on ;
+
+% % Poor bandwidth eye
+subplot (1 ,2 ,2) ;
+hold on ;
+for b = 20:200
+idx = (b -1) * sps + (1:2* sps ) ;
+plot ( eyeTime , ...
+yPoor ( idx ) , ...
+’ LineWidth ’ ,0.5) ;
+end
+xlabel ( ’ Time / T_b ’) ;
+ylabel ( ’ Normalized Voltage ’) ;
+title ( ’ Narrower Bandwidth , Higher Noise ’) ;
+ylim ([ -0.3 1.3]) ;
+
+32
+
+grid on ;
+
+%% =========================================================
+% PART 5: DISPLAY PARAMETERS
+% ==========================================================
+fprintf ( ’\ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ DIGITAL OPTICAL COMMUNICATION SIMULATION \ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ Number of bits
+fprintf ( ’ Bit rate
+fprintf ( ’ Samples per bit
+fprintf ( ’ Sampling frequency
+
+=
+=
+=
+=
+
+% d \ n ’ , Nbits ) ;
+%.2 f Gbps \ n ’ , Rb /1 e9 ) ;
+% d \ n ’ , sps ) ;
+%.2 f GHz \ n ’ , Fs /1 e9 ) ;
+
+fprintf ( ’\ n ’) ;
+fprintf ( ’ Good channel BW
+fprintf ( ’ Poor channel BW
+
+= %.2 f GHz \ n ’ , fcGood /1 e9 ) ;
+= %.2 f GHz \ n ’ , fcPoor /1 e9 ) ;
+
+fprintf ( ’\ nSimulation completed successfully .\ n ’) ;
+
+33
+
+6
+
+Experiment : WDM Spectrum, Fiber Attenuation, and OTDR
+Simulation
+
+6.1
+
+Objectives
+
+• Generate a Wavelength Division Multiplexing (WDM) spectrum.
+• Observe wavelength-dependent attenuation.
+• Estimate fiber attenuation and splice loss from an OTDR trace.
+• Add another splice with a one-way loss of 0.5 dB at 25 km.
+• Reduce WDM channel spacing and observe spectral overlap.
+
+6.2
+
+Theory and Relevant Equations
+
+WDM allows multiple optical wavelength channels to travel through the same fiber. The received
+power of channel k is:
+Prx,k = Ptx,k 10−αk L/10
+An Optical Time-Domain Reflectometer (OTDR) launches optical pulses and measures returning backscatter and reflections to characterize fiber loss and locate events. Distance is
+calculated from round-trip delay:
+ct
+z=
+2ng
+where ng is the group refractive index.
+This experiment displays the OTDR signal as raw returned-power level in dB:
+Preturn,dB (z) = C − 2αz − 2Levent (z)
+Consequently, half the magnitude of the trace slope gives the one-way attenuation. A
+commercial OTDR’s calibrated loss display may use a different convention.
+
+6.3
+
+Simulation Parameters
+Parameter
+
+Baseline value
+
+Wavelength grid (λ)
+Channel centres (λk )
+Spectral width (σλ )
+Channel powers (Pchannel )
+Attenuation coefficients (αW DM )
+Fiber length (L)
+Speed of light (c)
+Group refractive index (ng )
+Distance vector (z)
+OTDR attenuation (α)
+First splice position / Loss
+Second splice position / Loss
+
+1548 to 1555 nm; 5000 samples
+[1549, 1550.5, 1552, 1553.5] nm
+0.06 nm
+1 × 10−3 W per channel
+[0.20, 0.21, 0.22, 0.23] dB/km
+40 km
+3 × 108 m/s
+1.468
+0 to 40 km (step 0.01 km)
+0.20 dB/km (one-way)
+15 km; 0.8 dB (one-way)
+25 km; 0.5 dB (one-way)
+
+34
+
+6.4
+
+Procedure
+
+1. Initialize Wavelength grid from 1548 to 1555 nm with 5000 samples and define 4 channel
+center wavelengths.
+2. Compute unit-area Gaussian spectrum profiles for each channel and accumulate transmitted (Stx) and received (Srx) spectral power densities over a 40 km fiber link.
+3. Calculate individual received channel powers in dBm and display results.
+4. Simulate Part B by generating a simplified raw OTDR distance and round-trip time trace
+with a 15 km non-reflective splice and added Gaussian measurement noise.
+5. Perform linear regression (polyfit) on selected distance regions before and after the splice
+event to estimate fiber attenuation and splice loss.
+6. Execute Part 3 and Part 4 to evaluate the impact of reduced WDM channel spacing
+(0.12 nm) and multiple splice events (0.5 dB at 25 km), extracting multi-event losses via
+specialized fitting intervals.
+
+6.5
+
+Results and Generated Figures
+
+Physical Interpretation: The four WDM channels appear as separate spectral peaks. Because the channels have different attenuation coefficients, their received powers are approximately −8, −8.4, −8.8, and −9.2 dBm. A downward step appears at 15 km in the OTDR trace
+because of the splice. A step of approximately 1.6 dB in this raw round-trip trace corresponds
+to a one-way splice loss of approximately 0.8 dB. The estimated attenuation should be approximately 0.20 dB/km.
+
+Figure 6: Four-Channel WDM Transmitted and Received Spectrum.
+
+6.6
+
+Parameter Comparisons and Model Limitations
+
+Parameter Changes: Reducing WDM channel spacing causes spectral overlapping, while
+adding a second splice introduces an additional return-level step on the OTDR trace.
+35
+
+Figure 7: OTDR Trace vs Distance and OTDR Trace vs Round-trip Time.
+
+Figure 8: Effect of WDM Channel Spacing (1.50 nm vs 0.12 nm).
+Limitations: The OTDR model assumes uniform backscatter and excludes reflective peaks,
+pulse-width resolution, dead zones, and the instrument noise floor. The WDM section models
+spectra and attenuation rather than complete modulated-data transmission.
+
+6.7
+
+Complete MATLAB Code
+
+clear ;
+clc ;
+
+36
+
+Figure 9: Effect of Multiple Splices on the OTDR Trace.
+close all ;
+rng (20) ;
+%% =========================================================
+% PART 1: WDM TRANSMISSION
+% ==========================================================
+lambda = linspace (1548 ,1555 ,5000) ;
+% Four WDM channel center wavelengths ( nm )
+centers = [1549 1550.5 1552 1553.5];
+% Spectral width ( nm )
+sigmaLambda = 0.06;
+% Channel powers (1 mW each )
+Pchannel = 1e -3 * ones (1 ,4) ;
+% Channel attenuation ( dB / km )
+alphaWDM = [0.20 0.21 0.22 0.23];
+% Fiber length ( km )
+L = 40;
+% Initialize transmitted and received spectra
+Stx = zeros ( size ( lambda ) ) ;
+Srx = zeros ( size ( lambda ) ) ;
+% Generate WDM channels
+for k = 1: length ( centers )
+shape = exp ( -0.5*(( lambda - centers ( k ) ) / sigmaLambda ) .^2) ...
+/( sqrt (2* pi ) * sigmaLambda ) ;
+
+37
+
+Stx = Stx + Pchannel ( k ) * shape ;
+% Received spectrum after fiber attenuation
+Srx = Srx + ...
+Pchannel ( k ) *10^( - alphaWDM ( k ) * L /10) * shape ;
+end
+% Received channel powers
+PrxChannels = Pchannel .* 10.^( - alphaWDM * L /10) ;
+% % Plot transmitted and received WDM spectra
+figure ( ’ Color ’ , ’w ’) ;
+plot ( lambda ,...
+10* log10 ( max ( Stx ,1 e -15) /1 e -3) ,...
+’b ’ , ’ LineWidth ’ ,1.4) ;
+hold on ;
+plot ( lambda ,...
+10* log10 ( max ( Srx ,1 e -15) /1 e -3) ,...
+’r ’ , ’ LineWidth ’ ,1.4) ;
+xlabel ( ’ Wavelength ( nm ) ’) ;
+ylabel ( ’ Spectral Density ( dBm / nm ) ’) ;
+legend ( ’ Transmitted ’ , ’ Received ’) ;
+title ( ’ WDM Transmitted and Received Spectrum ’) ;
+ylim ([ -70 15]) ;
+grid on ;
+% % Display received channel powers
+disp ( ’ ’) ;
+disp ( ’ Received Channel Powers : ’) ;
+for k = 1:4
+fprintf ( ’ Channel % d (%.1 f nm ) : %.4 f dBm \ n ’ ,...
+k , centers ( k ) ,...
+10* log10 ( PrxChannels ( k ) /1 e -3) ) ;
+end
+
+%% =========================================================
+% PART 2: OTDR ATTENUATION AND SPLICE LOSS
+% ==========================================================
+c = 3 e8 ;
+ng = 1.468;
+
+% Speed of light ( m / s )
+% Group refractive index
+
+% Distance ( km )
+z = 0:0.01:40;
+% Fiber attenuation
+alpha = 0.20;
+
+% dB / km
+
+% First splice
+
+38
+
+splicePosition = 15; % km
+spliceLoss = 0.8;
+% dB
+% Generate ideal OTDR trace
+traceDB = -35 ...
+- 2* alpha * z ...
+- 2* spliceLoss *( z >= splicePosition ) ;
+% Add measurement noise
+traceDB = traceDB + 0.04* randn ( size ( z ) ) ;
+% % Calculate round - trip time
+roundTripTime = 2* ng *( z *1000) / c ;
+% % Select regions for attenuation fitting
+mask1 = z >= 2 & z <= 12;
+mask2 = z >= 18 & z <= 30;
+% Linear fitting before and after splice
+fit1 = polyfit ( z ( mask1 ) , traceDB ( mask1 ) ,1) ;
+fit2 = polyfit ( z ( mask2 ) , traceDB ( mask2 ) ,1) ;
+% Estimate attenuation
+alphaEstimated = - fit1 (1) /2;
+% Estimate splice loss
+spliceEstimated = ...
+( polyval ( fit1 ,15) - polyval ( fit2 ,15) ) /2;
+
+% % Plot OTDR trace
+figure ( ’ Color ’ , ’w ’) ;
+subplot (2 ,1 ,1) ;
+plot (z , traceDB , ’ LineWidth ’ ,1.2) ;
+grid on ;
+xlabel ( ’ Distance ( km ) ’) ;
+ylabel ( ’ Raw Return Level ( dB ) ’) ;
+title ( ’ OTDR Trace vs Distance ’) ;
+
+subplot (2 ,1 ,2) ;
+plot ( roundTripTime *1 e6 , traceDB , ’ LineWidth ’ ,1.2) ;
+grid on ;
+xlabel ( ’ Round - trip Time (\ mus ) ’) ;
+ylabel ( ’ Raw Return Level ( dB ) ’) ;
+title ( ’ OTDR Trace vs Round - trip Time ’) ;
+
+39
+
+% % Display estimated values
+fprintf ( ’\ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ OTDR RESULTS \ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ Attenuation = %.6 f dB / km \ n ’ ,...
+alphaEstimated ) ;
+fprintf ( ’ Splice loss = %.6 f dB \ n ’ ,...
+spliceEstimated ) ;
+
+%% =========================================================
+% PART 3: EFFECT OF WDM CHANNEL SPACING
+% ==========================================================
+% Close channel spacing = 0.12 nm
+centersClose = 1551 + (0:3) *0.12;
+StxClose = zeros ( size ( lambda ) ) ;
+for k = 1:4
+shape = exp ( -0.5*(( lambda - centersClose ( k ) ) / sigmaLambda ) .^2) ...
+/( sqrt (2* pi ) * sigmaLambda ) ;
+StxClose = StxClose + Pchannel ( k ) * shape ;
+end
+
+% % Plot channel spacing comparison
+figure ( ’ Color ’ , ’w ’) ;
+plot ( lambda , Stx *1 e3 ,...
+’ LineWidth ’ ,1.2) ;
+hold on ;
+plot ( lambda , StxClose *1 e3 ,...
+’ LineWidth ’ ,1.2) ;
+xlabel ( ’ Wavelength ( nm ) ’) ;
+ylabel ( ’ Density ( mW / nm ) ’) ;
+legend ( ’ 1.50 nm spacing ’ ,...
+’ 0.12 nm spacing ’) ;
+title ( ’ Effect of WDM Channel Spacing ’) ;
+grid on ;
+
+%% =========================================================
+% PART 4: EFFECT OF TWO SPLICES
+
+40
+
+% ==========================================================
+% First splice at 15 km
+baseClean = -35 ...
+- 2* alpha * z ...
+- 2* spliceLoss *( z >= 15) ;
+% Second splice :
+% Position = 25 km
+% One - way splice loss = 0.5 dB
+twoClean = baseClean ...
+- 2*0.5*( z >= 25) ;
+
+% % Plot one - splice vs two - splice OTDR trace
+figure ( ’ Color ’ , ’w ’) ;
+plot (z , baseClean ,...
+’ LineWidth ’ ,1.2) ;
+hold on ;
+plot (z , twoClean ,...
+’ LineWidth ’ ,1.2) ;
+grid on ;
+xlabel ( ’ Distance ( km ) ’) ;
+ylabel ( ’ Raw Return Level ( dB ) ’) ;
+legend ( ’ One splice ’ , ’ Two splices ’) ;
+title ( ’ Effect of Multiple Splices ’) ;
+
+%% =========================================================
+% PART 5: ESTIMATE BOTH SPLICE LOSSES
+% ==========================================================
+rng (20) ;
+% Add noise
+twoNoisy = twoClean + 0.04* randn ( size ( z ) ) ;
+%
+a
+b
+d
+
+Fitting regions
+= z >= 2 & z <= 12;
+= z >= 18 & z <= 23;
+= z >= 28 & z <= 36;
+
+% Linear fits
+fa = polyfit ( z ( a ) , twoNoisy ( a ) ,1) ;
+fb = polyfit ( z ( b ) , twoNoisy ( b ) ,1) ;
+fd = polyfit ( z ( d ) , twoNoisy ( d ) ,1) ;
+% First splice loss at 15 km
+loss15 = ...
+
+41
+
+( polyval ( fa ,15) - polyval ( fb ,15) ) /2;
+% Second splice loss at 25 km
+loss25 = ...
+( polyval ( fb ,25) - polyval ( fd ,25) ) /2;
+
+% % Display final results
+fprintf ( ’\ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ MULTIPLE SPLICE RESULTS \ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ First splice
+loss15 ) ;
+
+(15 km ) = %.6 f dB \ n ’ ,...
+
+fprintf ( ’ Second splice (25 km ) = %.6 f dB \ n ’ ,...
+loss25 ) ;
+fprintf ( ’\ n ’) ;
+fprintf ( ’ Expected attenuation
+alpha ) ;
+
+= %.2 f dB / km \ n ’ ,...
+
+fprintf ( ’ Expected first splice = %.2 f dB \ n ’ ,...
+spliceLoss ) ;
+fprintf ( ’ Expected second splice = %.2 f dB \ n ’ ,...
+0.5) ;
+fprintf ( ’\ nSimulation completed successfully .\ n ’) ;
+
+42
+
+

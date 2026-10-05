@@ -1,0 +1,186 @@
+clear ;
+clc ;
+close all ;
+%% =========================================================
+% OPTICAL SOURCES : LED vs LASER
+% Power - Current , Efficiency and Modulation Response
+
+
+% ==========================================================
+% % Physical Constants
+h = 6.626 e -34;
+c = 3 e8 ;
+q = 1.602 e -19;
+
+% Planck constant ( J . s )
+% Speed of light ( m / s )
+% Electron charge ( C )
+
+lambda = 850 e -9;
+
+% Wavelength ( m )
+
+% Optical frequency
+nu = c / lambda ;
+
+%% =========================================================
+% INJECTION CURRENT
+% ==========================================================
+% Avoid I = 0 in efficiency calculation
+I = linspace (0.1 e -3 ,100 e -3 ,1000) ;
+
+%% =========================================================
+% DEVICE PARAMETERS
+% ==========================================================
+etaLED = 0.03;
+
+% LED optical conversion factor
+
+etaLaser = 0.40;
+
+% Laser optical conversion factor
+
+Ith = 25 e -3;
+
+% Laser threshold current ( A )
+
+
+VLED = 1.8;
+
+% LED forward voltage ( V )
+
+VLaser = 2.0;
+
+% Laser voltage ( V )
+
+%% =========================================================
+% OPTICAL OUTPUT POWER
+% ==========================================================
+% LED optical output power
+PLED = etaLED * ( h * nu / q ) .* I ;
+% Laser optical output power
+% Laser produces significant output above threshold current
+PLaser = etaLaser * ( h * nu / q ) .* max (I - Ith ,0) ;
+
+%% =========================================================
+% WALL - PLUG EFFICIENCY
+% ==========================================================
+effLED = 100 * PLED ./ ( VLED * I ) ;
+effLaser = 100 * PLaser ./ ( VLaser * I ) ;
+
+%% =========================================================
+% SMALL - SIGNAL MODULATION RESPONSE
+% ==========================================================
+% Frequency range
+f = logspace (6 ,10.5 ,1500) ;
+% LED bandwidth
+fc = 50 e6 ;
+% Laser relaxation frequency
+fr = 3 e9 ;
+% Damping factor
+zeta = 0.45;
+
+% % LED response
+HLED = 1 ./ (1 + 1 j * f / fc ) ;
+
+% % LASER response
+HLaser = ...
+fr ^2 ./ ...
+( fr ^2 - f .^2 + 1 j *2* zeta * fr .* f ) ;
+
+%% =========================================================
+% PLOTS
+% ==========================================================
+
+
+figure ( ’ Color ’ , ’w ’) ;
+
+% % 1. Power - Current Characteristics
+subplot (2 ,2 ,1) ;
+plot ( I *1 e3 ,...
+PLED *1 e3 ,...
+’b ’ , ’ LineWidth ’ ,1.6) ;
+hold on ;
+plot ( I *1 e3 ,...
+PLaser *1 e3 ,...
+’r ’ , ’ LineWidth ’ ,1.6) ;
+xlabel ( ’ Current ( mA ) ’) ;
+ylabel ( ’ Optical Power ( mW ) ’) ;
+legend ( ’ LED ’ , ’ LASER ’ ,...
+’ Location ’ , ’ northwest ’) ;
+title ( ’ Power - Current Characteristics ’) ;
+grid on ;
+
+% % 2. Electrical - to - Optical Efficiency
+subplot (2 ,2 ,2) ;
+plot ( I *1 e3 ,...
+effLED ,...
+’b ’ , ’ LineWidth ’ ,1.6) ;
+hold on ;
+plot ( I *1 e3 ,...
+effLaser ,...
+’r ’ , ’ LineWidth ’ ,1.6) ;
+xlabel ( ’ Current ( mA ) ’) ;
+ylabel ( ’ Wall - Plug Efficiency (%) ’) ;
+legend ( ’ LED ’ , ’ LASER ’ ,...
+’ Location ’ , ’ northwest ’) ;
+title ( ’ Electrical - to - Optical Efficiency ’) ;
+grid on ;
+
+% % 3. Small - Signal Modulation Response
+subplot (2 ,2 ,[3 4]) ;
+
+
+semilogx ( f /1 e9 ,...
+20* log10 ( abs ( HLED ) ) ,...
+’b ’ , ’ LineWidth ’ ,1.6) ;
+hold on ;
+semilogx ( f /1 e9 ,...
+20* log10 ( abs ( HLaser ) ) ,...
+’r ’ , ’ LineWidth ’ ,1.6) ;
+xlabel ( ’ Modulation Frequency ( GHz ) ’) ;
+ylabel ( ’ Normalized Response ( dB ) ’) ;
+legend ( ’ LED ’ , ’ LASER ’ ,...
+’ Location ’ , ’ southwest ’) ;
+title ( ’ Small - Signal Modulation Response ’) ;
+grid on ;
+
+%% =========================================================
+% DISPLAY RESULTS
+% ==========================================================
+fprintf ( ’\ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ LED vs LASER RESULTS \ n ’) ;
+fprintf ( ’ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \ n ’) ;
+fprintf ( ’ Wavelength
+lambda *1 e9 ) ;
+
+= %.0 f nm \ n ’ ,...
+
+fprintf ( ’ Optical frequency
+nu ) ;
+
+= %.3 e Hz \ n ’ ,...
+
+fprintf ( ’\ n ’) ;
+fprintf ( ’ LASER threshold current
+Ith *1 e3 ) ;
+
+= %.1 f mA \ n ’ ,...
+
+fprintf ( ’ LASER slope efficiency
+etaLaser * h * nu / q ) ;
+
+= %.3 f W / A \ n ’ ,...
+
+fprintf ( ’ LED conversion factor
+etaLED ) ;
+
+= %.3 f \ n ’ ,...
+
+fprintf ( ’ LASER conversion factor
+etaLaser ) ;
+
+= %.3 f \ n ’ ,...
+
+fprintf ( ’\ nSimulation completed successfully .\ n ’) ;
